@@ -1,0 +1,6 @@
+[submodule "hsmw-beamer"]
+	path = hsmw-beamer
+	url = ../hsmw-beamer.git
+[submodule "hsmw-thesis"]
+	path = hsmw-thesis
+	url = ../hsmw-thesis.git

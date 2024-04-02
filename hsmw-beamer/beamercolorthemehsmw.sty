@@ -1,0 +1,134 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Default colors for every theme
+\definecolor{hsmwWhite}{HTML}{ffffff}
+\definecolor{hsmwUltraLightGray}{HTML}{e3e3e3} %TODO not defined in CD yet (taken from powerpoint template)
+\definecolor{hsmwLightGray}{HTML}{b2b2b2}
+\definecolor{hsmwDarkGray}{HTML}{6f6f6f}
+\definecolor{hsmwBlack}{HTML}{000000}
+
+%%% The default blue colors will only be loaded if no other colortheme has already defined them (providecolor does not override existing colors)
+\providecolor{hsmw}{HTML}{0069b4}
+\providecolor{hsmw80}{HTML}{2581c4}
+\providecolor{hsmw60}{HTML}{6c9ed4}	% \colorlet{hsmw60}{hsmw!60!white} results in 66A5D2 -> some "designer scaling" is used here
+\providecolor{hsmw40}{HTML}{a4bde3}
+\providecolor{hsmw20}{HTML}{d3ddf2}
+\providecolor{hsmw10}{HTML}{e9eef9}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Define color theme
+% Title page
+\setbeamercolor*{title page}{}
+\setbeamercolor*{title page title}{parent=title page, fg=hsmw}
+\setbeamercolor*{title page subtitle}{parent=title page title}
+\setbeamercolor*{title page subsubtitle}{parent=title page, fg=hsmwBlack}
+\setbeamercolor*{title page date}{parent=title page, fg=hsmwLightGray}
+\setbeamercolor*{title page sidebar}{parent=title page, fg=hsmwWhite, bg=hsmw}
+\setbeamercolor*{title page image}{parent=title page, bg=hsmwUltraLightGray}
+\setbeamercolor*{title page faculty}{parent=title page, fg=hsmw}
+
+% TOC page
+\setbeamercolor*{toc page}{fg=hsmwWhite, bg=hsmw}
+\setbeamercolor*{toc page title}{parent=toc page, bg=}
+\setbeamercolor*{toc page content}{parent=toc page, fg=hsmw, bg=hsmwWhite}
+
+% Section page
+\setbeamercolor*{section page}{fg=hsmwWhite, bg=hsmw}
+\setbeamercolor*{section page title}{parent=section page, bg=}
+\setbeamercolor*{section page rule}{parent=section page, bg=hsmwWhite}
+\setbeamercolor*{subsection page}{parent=section page}
+\setbeamercolor*{subsection page title}{parent=section page title}
+\setbeamercolor*{subsection page rule}{parent=section page rule}
+\setbeamercolor*{subsection page subtitle}{parent=subsection page title}
+
+% Thankyou page
+\setbeamercolor*{thankyou page}{fg=hsmwWhite, bg=hsmw}
+\setbeamercolor*{thankyou page sidebar}{fg=hsmw, bg=hsmwWhite}
+\setbeamercolor*{thankyou page title}{fg=hsmwWhite}
+\setbeamercolor*{thankyou page text}{parent=thankyou page title}
+\setbeamercolor*{thankyou page sidebar text}{parent=thankyou page title}
+
+% General title for every other slides
+\setbeamercolor*{frametitle}{fg=hsmw} % Title of each slide
+\setbeamercolor*{framesubtitle}{parent=frametitle} % Subtitle of each slide
+
+% Headline
+\setbeamercolor*{headline}{fg=, bg=}
+
+% Footline
+\setbeamercolor*{footline}{fg=hsmw}
+\setbeamercolor*{footline title}{parent=footline, fg=hsmw}
+\setbeamercolor*{footline date}{parent=footline, fg=hsmwLightGray}
+\setbeamercolor*{footline number current}{parent=footline, fg=hsmw}
+\setbeamercolor*{footline number overall}{parent=footline, fg=hsmwLightGray}
+\setbeamercolor*{footline faculty}{parent=footline, fg=hsmw}
+
+\setbeamercolor*{progressbar}{bg=hsmw}
+\setbeamercolor*{progressbar past}{parent=progressbar, bg=hsmw80}
+\setbeamercolor*{progressbar current}{parent=progressbar, bg=hsmw}
+\setbeamercolor*{progressbar future}{parent=progressbar, bg=hsmw20}
+
+% Notes
+\setbeamercolor*{note page}{bg=, fg=hsmwBlack}
+\setbeamercolor*{note page watermark}{fg=hsmwUltraLightGray}
+
+% ToC
+\setbeamercolor*{section in toc}{fg=hsmw, bg=}
+\setbeamercolor*{section in toc shaded}{fg=hsmw, bg=}
+
+% Bib
+\setbeamercolor*{structure}{parent=normal text}
+%\setbeamercolor*{bibliography item}{fg=red, bg=green} % enumerate
+%\setbeamercolor*{bibliography entry author}{fg=red, bg=green} % The default color is the structure color.
+%\setbeamercolor*{bibliography entry title}{fg=red, bg=green} % The default color is the normal text color.
+%\setbeamercolor*{bibliography entry location}{fg=red, bg=green} % The default color is a slightly transparent version of the structure color.
+%\setbeamercolor*{bibliography entry note}{fg=red, bg=green} % The default color is the same as for the journal.
+
+% General
+\setbeamercolor*{normal text}{fg=hsmwBlack} % General text
+\setbeamercolor*{item}{fg=hsmw} % Item-Symbols
+\setbeamercolor*{caption name}{fg=hsmw} % Caption names
+\setbeamercolor*{block title}{fg=hsmw, bg=hsmw20} % Block enivornment names (theorem, proof, etc.)
+\setbeamercolor*{block body}{bg=hsmw10} % Block enivornment names (theorem, proof, etc.)
+
+\hypersetup
+{ 
+	breaklinks,
+	colorlinks,
+	linkcolor={hsmw},
+	anchorcolor={hsmw},
+	citecolor={hsmw},
+	filecolor={hsmw},
+	menucolor={hsmw},
+	runcolor={hsmw},
+	urlcolor={hsmw}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Switch elements of the color theme depending on given options
+
+% fancystyle
+\iftoggle{option@fancystyle}
+{
+	\setbeamercolor*{title page subtitle}{parent=title page, fg=hsmw80}
+	\setbeamercolor*{framesubtitle}{fg=hsmw60}
+	\setbeamercolor*{normal text}{fg=hsmwDarkGray}
+}{}
+
+%TODO: Improve readablility with e.g. switch-environment: current problem with local scope of switch (not globally changed)
+% colormath 
+\ifthenelse{\equal{full}{\option@value@colormath}} % full = fully color math text
+{
+	\setbeamercolor*{math text}{fg=hsmw}
+}{
+	\ifthenelse{\equal{nottext}{\option@value@colormath}} % nottext = \text in normal text, rest colored
+	{
+		\setbeamercolor*{math text}{fg=hsmw}
+		\setbeamercolor*{normal text in math text}{use={normal text}, fg=normal text.fg} % TODO: may be it should make use of the current text color instead, but how?
+	}{
+		\ifthenelse{\equal{off}{\option@value@colormath}} % off = do nothing    
+		{}
+		{% Print warning for unknown values
+			\PackageWarning{beamercolorthemehsmw}{Unknown value for option 'colormath'}
+		}
+	}
+}

@@ -1,0 +1,419 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{beamerthemehsmw}[2023/07/24 Beamer Vorlage der Hochschule Mittweida] % https://zip.hs-mittweida.de/intranet/corporate_design.php
+% Please note: This template currently addresses primarily pdflatex (no active development with lualatex or xelatex, although compatibility is watched out for)
+
+% Beamer source code repository
+% https://github.com/josephwright/beamer/tree/main/base
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Process theme options
+
+% Allows options as key-value pairs (\DeclareOptionX instead of \DeclareOption)
+\RequirePackage{xkeyval} 
+% Allows continuous scaling of fonts (try to load as early as possible)
+\RequirePackage{fix-cm}
+
+\makeatletter
+	% Sets the default faculty to hs (responsible for color model, institute name and institute icon)
+	\def\option@value@faculty{}
+	\DeclareOptionX{hs}{\def\option@value@faculty{}}			% <empty>, hs (default)
+	\DeclareOptionX{inw}{\def\option@value@faculty{inw}}		% inw (maybe incorporate alternative/old values: mb)
+	\DeclareOptionX{cb}{\def\option@value@faculty{cb}}			% cb (maybe incorporate alternative/old values: mni)
+	\DeclareOptionX{wi}{\def\option@value@faculty{wi}}			% wi (maybe incorporate alternative/old values: ww)
+	\DeclareOptionX{sw}{\def\option@value@faculty{sw}}			% sw (maybe incorporate alternative/old values: sa)
+	\DeclareOptionX{me}{\def\option@value@faculty{me}}			% me
+	\DeclareOptionX{inst}{\def\option@value@faculty{inst}}		% inst
+	\DeclareOptionX{faculty}[]{\def\option@value@faculty{#1}}
+
+	% Declare language as key value option (default: ngerman)
+	\DeclareOptionX{language}[ngerman]{\PassOptionsToPackage{#1}{babel}} % Passes language directly to babel 
+
+	% Insert a table of contents at the beginning of the document (default: off)
+	\DeclareOptionX{toc}{\AddToHook{begindocument/end}{\maketoc}}
+
+	% Insert a separate frame for each section heading (ignore \section*) (default: off)
+	\DeclareOptionX{sectionslide}{\AtBeginSection[]{\begin{frame}[plain]\sectionpage\end{frame}}}
+	%TODO: Provide multiple styles for sectionslides (fully colored, minimalistic, with agenda, ...)
+	\DeclareOptionX{subsectionslide}{\AtBeginSubsection[]{\begin{frame}[plain]\subsectionpage\end{frame}}}
+	%TODO: Provide the same styles for subssectionslide
+
+	% Reduces the size of the page number
+	\DeclareOptionX{smallpagenumber}{\AddToHook{begindocument/before}{\setbeamertemplate{page number in head/foot}[small]}}
+
+	% Hides the total number of slide in footline (default: on)
+	\newtoggle{option@totalpages}\toggletrue{option@totalpages}
+	\DeclareOptionX{nototalpages}{\togglefalse{option@totalpages}}
+	
+	% Hides the faculty icon on title page (default: on)
+	\newtoggle{option@facultyicon}\toggletrue{option@facultyicon}
+	\DeclareOptionX{nofacultyicon}{\togglefalse{option@facultyicon}}
+
+	% Enables coloring of math text | possible values: off (default if not specified), full, nottext (default if specified)
+	\def\option@value@colormath{off}
+	\DeclareOptionX{colormath}[nottext]{\def\option@value@colormath{#1}}
+
+	% Enables Two that the handout is twosided needs handout option in beamerclass to make a difference
+	\newtoggle{option@printhandout}
+	\DeclareOptionX{printhandout}{\toggletrue{option@printhandout}}
+	%TODO: Switch to CMYK colors for fabulous printing experience in printout mode
+
+	% Disables frame subtitles alltogether and slightly increases frame height
+	\newtoggle{option@framesubtitle}\toggletrue{option@framesubtitle}
+	\DeclareOptionX{noframesubtitle}{\togglefalse{option@framesubtitle}}
+
+	%%%%%%% Non-compliant options %%%%%%%
+
+	% Shows the date on the titelpage
+	\newtoggle{option@titlepagedate}
+	\DeclareOptionX{titlepagedate}{\toggletrue{option@titlepagedate}}
+
+	% Enables some fancy styles, that are not part of the corporate design specifications (default: off)
+	\newtoggle{option@fancystyle}
+	\DeclareOptionX{fancystyle}{\toggletrue{option@fancystyle}}
+
+	% Shows the progressbar in footline (default: on)
+	\newtoggle{option@progressbar}  % \settoggle{show@progressbar}{true|false} \toggletrue{show@progressbar} % \iftoggle{show@progressbar}{if}{else}
+	\DeclareOptionX{progressbar}{\toggletrue{option@progressbar}}
+
+	%%%%%%% Option processing %%%%%%%
+	
+	% Print warnings for unknown options
+	\DeclareOptionX*{\PackageWarning{beamerthemehsmw}{Unknown option is ignored: \CurrentOption}}
+	
+	% Default options to be loaded 
+	\ExecuteOptionsX{language=ngerman}
+	
+	% Process all options
+	\ProcessOptionsX\relax
+\makeatother
+
+%TODO: Partnerlogo
+%\includegraphics[width=\textwidth,height=\textheight,keepaspectratio]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Load Packages
+% Preloaded packages by beamer in presentation mode: amsthm, color, enumerate, hyperref, xcolor
+
+% Pass specific options to the font package depending on the used compiler (pdfLaTeX, XeLaTeX, LuaLaTeX)
+\RequirePackage{iftex}
+\iftutex% True for XeTeX (\ifxetex) and LuaTeX (ifluatex)
+\else% Probably PDFTeX
+    \RequirePackage[T1]{fontenc} % Font-Encoding
+    \RequirePackage[utf8]{inputenc} % Input-Encoding
+\fi
+
+% Use Bera Type 1 fonts (Bitstream Vera family) for serif and typewriter (looks as a good match to Open Sans)
+\RequirePackage[scaled]{beraserif} % use as \rmdefault
+\RequirePackage[scaled]{beramono} % use as \ttdefault
+% Load OpenSans as sansserif and normalfont
+\RequirePackage[default,defaultsans]{opensans} % Sets OpenSans as familydefault and sfdefault
+
+\RequirePackage{babel} % Load babel package for language support (options passed by theme option "language")
+\RequirePackage{hyphenat} % Disables hyphenation by using a fake language (provides \nohyphens{})
+\RequirePackage[autostyle]{csquotes} % Improves nested quoting (provides \enquote makro for language specific quoting)
+\RequirePackage[fixed]{fontawesome5} % Provides modern symbols (http://mirrors.ctan.org/fonts/fontawesome5/doc/fontawesome5.pdf)
+%\RequirePackage[factor=1100, stretch=10, shrink=10, babel=true, nopatch=footnote]{microtype} %TODO: Seems to have problems within overleaf: "keyval error: nopatch undefined"
+
+\RequirePackage{tikz} % Tikz-Library for improved drawing capabilities
+\RequirePackage{tikz-layers} % Loads background library and creates new layers to use as scope options "backround", "behind", "main" (normal), "above", "glass" (e.g. "on above layer")
+
+\RequirePackage{tabularx, booktabs} % Tabular packages
+
+\RequirePackage{etoolbox} % Programming library
+\RequirePackage[absolute, overlay]{textpos} % Absolute placement of elements (display with option showboxes)
+\RequirePackage{adjustbox} % Versatile box environments (e.g. resizebox)
+\RequirePackage{caption} % Customizing options of captions (provides \captionof{env}{text})
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Default configurations
+
+% Sets the page grid to the default aspect ratio for easy alignment: (1, 1) is 1 cm away from the right and top border; (8, 4.5) is the page center
+\TPGrid{16}{9} 
+
+% Sets the distance between figure/table and caption
+\captionsetup{skip=.25cm}
+
+% Adds the subtitle into the pdf document metadata
+\AddToHook{begindocument/before}{\subject{\insertsubtitle}}
+% Sets the pdf keywords
+\keywords{Hochschule Mittweida}
+
+% TODO If more than one institute is given, they should be separated using the command \and and they should be prefixed by the command \inst with different parameters.
+% \author{Name\inst{1} \and Name\inst{1,2} \and Name\inst{3}}
+% \institute{\inst{1} First Institute \and \inst{2} Second Department \and \inst{3} Third University}  
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Internal programming commands
+
+% Latex switch case construct
+%TODO: Replace by more robust version that is capable of global changes (ifthenelse works in local group) and use more stable toggle from etoolbox instead of boolean
+\RequirePackage{ifthen} % provide Makros \newboolean, \setboolean, \ifthenelse ect. 
+\newboolean{default}
+\newcommand{\case}{}
+\newcommand{\default}{}
+\newenvironment{switch}[1]%
+{%
+	\setboolean{default}{true}%
+	\renewcommand{\case}[2]{\ifthenelse{\equal{#1}{##1}}{\setboolean{default}{false}##2}{}}%
+	\renewcommand{\default}[1]{\ifthenelse{\boolean{default}}{##1}{}}%
+}{}
+
+\newlength{\displayablecontentwidth}
+\newcommand{\ifdisplayablecontent}[3]%
+{%
+	\settowidth{\displayablecontentwidth}{#1}%
+	\ifdimequal{\displayablecontentwidth}{0pt}{#3}{#2}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Set faculty name and icon
+
+% The name of the faculty (default: empty)
+\newcommand{\insertfacultyname}{} 
+% The faculty logo (default: all icons side by side)
+\newcommand{\insertfacultyicon}
+{%
+	\foreach \f in {INW, CB, WI, SW, ME, HS}%
+	{%
+		\includegraphics[height=0.65 cm]{figures/iconFaculty\f.pdf}%
+		\hspace*{0.5 cm}%
+	}%
+}
+
+% CD page 16
+\makeatletter
+	% Fallback if faculty=hs is specified: reset to empty
+	\ifthenelse{\equal{\option@value@faculty}{hs}}{\def\option@value@faculty{}}{}
+	
+	\begin{switch}{\option@value@faculty}  
+		\case{inw}{
+			\addto\captionsngerman{\renewcommand{\insertfacultyname}{Ingenieur\-wissenschaften}}
+			\addto\captionsenglish{\renewcommand{\insertfacultyname}{Engineering Sciences}}
+			\gdef\insertfacultyicon{\includegraphics[height=0.65 cm]{figures/iconFacultyINW.pdf}}
+		}  
+		\case{cb}{
+			\addto\captionsngerman{\renewcommand{\insertfacultyname}{Angewandte Computer- und Biowissenschaften}}
+			\addto\captionsenglish{\renewcommand{\insertfacultyname}{Applied Computer Sciences and Biosciences}}
+			\gdef\insertfacultyicon{\includegraphics[height=0.65 cm]{figures/iconFacultyCB.pdf}}
+		}  
+		\case{wi}{
+			\addto\captionsngerman{\renewcommand{\insertfacultyname}{Wirtschafts\-ingenieurwesen}}
+			\addto\captionsenglish{\renewcommand{\insertfacultyname}{Industrial Engineering}}
+			\gdef\insertfacultyicon{\includegraphics[height=0.65 cm]{figures/iconFacultyWI.pdf}}
+		}  
+		\case{sw}{
+			\addto\captionsngerman{\renewcommand{\insertfacultyname}{Soziale Arbeit}}
+			\addto\captionsenglish{\renewcommand{\insertfacultyname}{Social Sciences}}
+			\gdef\insertfacultyicon{\includegraphics[height=0.65 cm]{figures/iconFacultySW.pdf}}
+		}  
+		\case{me}{
+			\addto\captionsngerman{\renewcommand{\insertfacultyname}{Medien}}
+			\addto\captionsenglish{\renewcommand{\insertfacultyname}{Media Sciences}}
+			\gdef\insertfacultyicon{\includegraphics[height=0.65 cm]{figures/iconFacultyME.pdf}}
+		}
+		\case{inst}{
+			\gdef\insertfacultyicon{\includegraphics[height=0.65 cm]{figures/iconFacultyHS.pdf}}
+			\gdef\option@value@faculty{} % Load default blue hsmw color theme
+		}
+		\default{% Default: placing all icons without any text 
+			\gdef\option@value@faculty{} % resetting faculty to hs, if anything else is given, to correctly load color theme
+		}
+	\end{switch}
+\makeatother
+%TODO: Introduce separate options for color theme, faculty icon, faculty name (titlepage and footnote) and use presets for currently existing setups (hs, cb, ...)
+
+% Use the faculty name as default institution
+\institute{\insertfacultyname}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Define speaker commands
+
+\newcommand{\currentspeakerlabel}{}
+\addto\captionsngerman{\renewcommand{\currentspeakerlabel}{Sprecher}}
+\addto\captionsenglish{\renewcommand{\currentspeakerlabel}{Speaker}}
+
+\NewDocumentCommand{\setcurrentspeaker}{sm}{\gdef\currentSpeaker{\IfBooleanTF#1{\currentspeakerlabel{}: }{}#2}}
+\NewDocumentCommand{\resetcurrentspeaker}{s}{\IfBooleanTF#1{\setcurrentspeaker*{\insertshortauthor}}{\setcurrentspeaker{\insertshortauthor}}}
+\NewDocumentCommand{\insertcurrentspeaker}{}{\currentSpeaker}
+
+\resetcurrentspeaker{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Load theme files
+
+\makeatletter
+	\usecolortheme{hsmw\option@value@faculty} % Load specific color theme for faculty
+	\usecolortheme{hsmw} % Load default color theme (previously defined values will be used)
+	\usefonttheme{hsmw} % Used fonts and font styles
+	\useinnertheme{hsmw} % Typesetting objects inside the frames (content): enumerations, blocks, toc, ...
+	\useoutertheme{hsmw} % Typesetting the overall layout, headline, footer, sidebar, logo, navigation, frametitle, ...
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Prepare macros for easier access of default slides
+
+% Redefines the maketitle macro
+\RenewDocumentCommand{\maketitle}{}
+{
+	\begin{frame}[plain]
+		\titlepage
+	\end{frame}
+}
+% Automatically inserts maketitle at the beginning of the document
+\AddToHook{begindocument}{\maketitle}
+
+%  Defines the maketoc macro
+\NewDocumentCommand{\maketoc}{}
+{
+	\begin{frame}
+		\usebeamertemplate*{toc page}
+	\end{frame}
+}
+
+%TODO Switch?
+%	\appto\captionsngerman{\renewcommand{\contentsname}{Inhaltsverzeichnis}}
+%	\appto\captionsenglish{\renewcommand{\contentsname}{Table of Contents}}
+\appto\captionsngerman{\renewcommand{\contentsname}{Agenda}}
+\appto\captionsenglish{\renewcommand{\contentsname}{Agenda}}
+
+%  Defines the makebibliography macro
+\NewDocumentCommand{\makebibliography}{}
+{
+	\begin{frame}[allowframebreaks]{\bibname}
+		\printbibliography
+	\end{frame}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Defines the makethankyou macro and associated macros for content modification
+
+\newcommand{\insertemail}{}
+\newcommand{\email}[1]{\renewcommand{\insertemail}{#1}}
+
+\newcommand{\inserttelephone}{}
+\newcommand{\insertmobilephone}{}
+\newcommand{\phone}[2][]{\renewcommand{\insertmobilephone}{#1}\renewcommand{\inserttelephone}{#2}}
+
+\newcommand{\insertoffice}{}
+\newcommand{\office}[1]{\renewcommand{\insertoffice}{#1}}
+
+\newcommand{\insertcourseofstudies}{}
+\newcommand{\courseofstudies}[1]{\renewcommand{\insertcourseofstudies}{#1}}
+
+\newcommand{\insertadditional}{}
+\newcommand{\insertadditionalsidebar}{}
+\newcommand{\additional}[2][]{\renewcommand{\insertadditionalsidebar}{#1}\renewcommand{\insertadditional}{#2}}
+
+\NewDocumentCommand{\makethankyou}{}
+{
+	\begin{frame}[plain]
+		\usebeamertemplate*{thankyou page}
+	\end{frame}
+}
+
+\newcommand{\insertthankyoutitle}{}
+\addto\captionsngerman{\renewcommand{\insertthankyoutitle}{Vielen Dank}}
+\addto\captionsenglish{\renewcommand{\insertthankyoutitle}{Thank You}}
+
+\NewDocumentCommand{\insertthankyousidebartext}{}
+{
+	\textbf{Hochschule Mittweida}
+	\newline
+	University of Applied Sciences
+	\newline
+	Technikumplatz 17 | 09648 Mittweida
+	\ifdisplayablecontent{\insertshortinstitute}{\newline\insertshortinstitute}{}
+	\ifdisplayablecontent{\insertadditionalsidebar}{\newline\insertadditionalsidebar}{}
+}
+
+\makeatletter
+\newcommand{\insertthankyoutext}
+{
+	% Remove \inst from author
+	\let\beamer@insttitle=\@gobble
+		
+	\iftoggle{option@fancystyle}
+	{
+		%TODO: Remove fontawesome and use hsmw icons from webpage
+		% eMail: M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2zm13 2.383l-4.758 2.855L15 11.114v-5.73zm-.034 6.878L9.271 8.82 8 9.583 6.728 8.82l-5.694 3.44A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.739zM1 11.114l4.758-2.876L1 5.383v5.73z
+		% Phone: M2.267.98a1.636 1.636 0 0 1 2.448.152l1.681 2.162c.309.396.418.913.296 1.4l-.513 2.053a.636.636 0 0 0 .167.604L8.65 9.654a.636.636 0 0 0 .604.167l2.052-.513a1.636 1.636 0 0 1 1.401.296l2.162 1.681c.777.604.849 1.753.153 2.448l-.97.97c-.693.693-1.73.998-2.697.658a17.47 17.47 0 0 1-6.571-4.144A17.47 17.47 0 0 1 .639 4.646c-.34-.967-.035-2.004.658-2.698l.97-.969z
+		% Office: 
+		% M8 3.293l6 6V13.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5V9.293l6-6zm5-.793V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z
+		% M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z
+		% Person: 
+		% M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z
+		% M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1h-3zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5zM.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5z
+		
+		\begin{tabularx}{\linewidth}{@{}cX@{}}
+			\ifdisplayablecontent{\insertauthor}{\faIdCard[regular] & \insertauthor\\\\}{}
+			\ifdisplayablecontent{\inserttelephone}{\faPhone* & \inserttelephone\\}{}
+			\ifdisplayablecontent{\insertmobilephone}{\faMobile* & \insertmobilephone\\}{}
+			\ifdisplayablecontent{\insertemail}{\faEnvelope[regular] & \insertemail\\\\}{}
+			\ifdisplayablecontent{\insertoffice}{\faUniversity & \insertoffice\\\\}{}
+			\ifdisplayablecontent{\insertcourseofstudies}{&\insertcourseofstudies\\}{}
+			\ifdisplayablecontent{\insertadditional}{&\insertadditional\\}{}
+		\end{tabularx}
+	}{
+		\ifdisplayablecontent{\insertauthor}{\insertauthor\\\vspace*{\baselineskip}}{}
+		\ifdisplayablecontent{\inserttelephone}{\parbox{2em}{\textbf{T}}\inserttelephone\\}{}
+		\ifdisplayablecontent{\insertmobilephone}{\parbox{2em}{\textbf{M}}\insertmobilephone\\}{}
+		\ifdisplayablecontent{\insertemail}{\insertemail\\\vspace*{\baselineskip}}{}
+		\ifdisplayablecontent{\insertoffice}{\insertoffice\\\vspace*{\baselineskip}}{}
+		\ifdisplayablecontent{\insertcourseofstudies}{\insertcourseofstudies\\}{}
+		\ifdisplayablecontent{\insertadditional}{\insertadditional\\}{}
+	}% this comment fixes underfull hbox in fancystyle
+}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Patches and adjustments
+
+\makeatletter
+	% Redefine top aligned frames to remove additional skip for nicer overall alignments of contents: https://github.com/josephwright/beamer/blob/main/base/beamerbaseframe.sty#L262
+	\define@key{beamerframe}{t}[true]%
+	{% top
+		\beamer@frametopskip=0pt\relax% \beamer@frametopskip=.2cm plus .5\paperheight\relax%
+		\beamer@framebottomskip=0pt plus 1fill\relax%
+		\beamer@frametopskipautobreak=\beamer@frametopskip\relax%
+		\beamer@framebottomskipautobreak=\beamer@framebottomskip\relax%
+	}
+
+	% Redefine shortinserts, so they are not stuck in a box (break all preparations): https://github.com/josephwright/beamer/blob/main/base/beamerbasemisc.sty#L186
+	\renewcommand{\beamer@insertshort}[1]%
+	{%\beamer@ststart#1\beamer@stend
+		#1%
+	}
+
+% Redefine \and within \insertauthor from \quad to comma: https://github.com/josephwright/beamer/blob/main/base/beamerbasetitle.sty#L143
+\def\beamer@andtitle{\unskip, }
+
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Package warnings and errors
+
+\AddToHook{begindocument}
+{
+	\ifdisplayablecontent{\inserttitle}{}{\PackageWarning{beamerthemehsmw}{No title given. Use \string\title\space to specify a title}}
+	\ifdisplayablecontent{\insertauthor}{}{\PackageWarning{beamerthemehsmw}{No author given. Use \string\author\space to specify an author}}
+}
+
+%%% Deprecated macros not longer in use
+
+\newcommand{\impressum}[3]{\PackageError{beamerthemehsmw}{The command '\string\impressum' was removed. Please use \string\phone, \string\email\space and \string\office\space instead}{Please use \string\phone, \string\email\space and \string\office\space instead}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\mode<handout>
+{
+	% Place 2 slightly shrinked slides per a4 page on handout mode
+	\iftoggle{option@printhandout}
+	{
+		%TODO: Maybe find a workaround to automatically pass the classoption handout to already loaded beamer
+
+		\RequirePackage{pgfpages}
+		\pgfpagesuselayout{2 on 1}[a4paper, border shrink=2cm]
+%		\pgfpageslogicalpageoptions{1}{border code=\pgfusepath{stroke}}
+%		\pgfpageslogicalpageoptions{2}{border code=\pgfusepath{stroke}}
+	}
+}{}%

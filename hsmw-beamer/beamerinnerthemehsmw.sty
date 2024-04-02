@@ -1,0 +1,345 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Inner theme should be responsible for
+%- Title and part pages.
+%- Itemize environments.
+%- Enumerate environments.
+%- Description environments.
+%- Block environments.
+%- Theorem and proof environments.
+%- Figures and tables.
+%- Footnotes.
+%- Bibliography entries.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Set some default styles
+
+\setbeamercovered{dynamic} % items to uncover are no longer invisible, but now transparent (options: invisible, transparent=50, dynamic, highly dynamic, still covered, again covered)
+
+\setbeamertemplate{caption}[default] % Add figure and table numbers (options: default (only text), numbered (text+number), caption name own line (only text, on extra line))
+
+%\setbeamertemplate{itemize items}[circle]
+\setbeamertemplate{itemize item}[circle] % (options: default (triangle), triangle, circle, square, ball)
+\setbeamertemplate{itemize subitem}[triangle]
+\setbeamertemplate{itemize subsubitem}[square]
+
+%\setbeamertemplate{enumerate items}[circle]
+\setbeamertemplate{enumerate item}[circle] % (options: default (text), circle, square, ball)
+\setbeamertemplate{enumerate subitem}[square]
+\setbeamertemplate{enumerate subsubitem}[circle]
+
+% Reclaims the first indentation on itemize and enumerate
+\setlength{\leftmargini}{0.5cm}
+\setlength{\leftmarginii}{0.5cm}
+\setlength{\leftmarginiii}{0.5cm}
+
+% Patch underline-Command to smash its contents and destroy the bounding box, thus drawing a nice baseline-underline
+\let\old@underline\underline
+\renewcommand{\underline}[1]{\old@underline{\smash{#1}}}
+
+%TODO Debug Background
+%\setbeamertemplate{background}[grid]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newsavebox{\facultyIconBox}
+\savebox{\facultyIconBox}{\insertfacultyicon\hspace*{.25cm}}
+
+% Title page
+\defbeamertemplate*{title page}{hsmw}
+{
+	\ifdisplayablecontent{\inserttitlegraphic}
+	{
+		\def\titleBoxWidth{6.75}
+		\def\titleBoxStart{1.9}
+		\def\titleBoxHeight{3.5}
+		\def\bottomBoxWidth{6.75}
+	}{
+		\def\titleBoxWidth{14}
+		\def\titleBoxStart{3}
+		\def\titleBoxHeight{2.4}
+		\def\bottomBoxWidth{9}
+	}
+
+	\hypersetup{hidelinks}
+
+	\ifbeamer@notesnormals
+		% Faculty logo and text
+		\begin{textblock}{9}(1, 0.675)
+			\begin{beamercolorbox}[wd=\linewidth, ht=0.65cm, dp=0cm, leftskip = 0cm]{title page faculty}
+				\iftoggle{option@facultyicon}
+				{%
+					\usebox{\facultyIconBox}%
+					\pgfmathparse{\linewidth - \wd\facultyIconBox}%
+				}
+				{\pgfmathparse{\linewidth}}%
+				%
+				\ifdisplayablecontent{\insertinstitute}
+				{%
+					\parbox[b][0.65cm][c]{\pgfmathresult pt}
+					{%
+						\usebeamerfont{title page faculty}%
+						\vspace*{.5ex}%
+						\insertinstitute%
+						\vphantom{Ag}%
+					}%
+				}{}%
+			\end{beamercolorbox}
+		\end{textblock}
+		
+		% Title
+		\begin{textblock}{\titleBoxWidth}(1, \titleBoxStart)
+			\begin{beamercolorbox}[wd=\linewidth, ht=\titleBoxHeight cm, dp=.2cm, leftskip = 0cm]{title page title} 
+				\usebeamerfont{title page title}%
+				\autofontscaledownbox{\linewidth}{\titleBoxHeight cm}{\inserttitle}
+			\end{beamercolorbox}
+		\end{textblock}
+		
+		% Subtitle
+		\begin{textblock}{\titleBoxWidth}(1, 5.65)
+			\begin{beamercolorbox}[wd=\linewidth, ht=1cm, dp=.1cm, leftskip = 0cm]{title page subtitle} 
+				\parbox[b][1cm][t]{\linewidth}
+				{%
+					\usebeamerfont{title page subtitle}%
+					\autofontscaledownbox{\linewidth}{1cm}{\insertsubtitle}%
+				}
+			\end{beamercolorbox}
+		\end{textblock}
+	
+		% Author
+		\begin{textblock}{\bottomBoxWidth}(1, 6.8)
+			\begin{beamercolorbox}[wd=\linewidth, ht=1cm, dp=.1cm, leftskip = 0cm]{title page subsubtitle} 
+				\usebeamerfont{title page subsubtitle}%
+				\nohyphens
+				\insertauthor
+			\end{beamercolorbox}
+		\end{textblock}
+	
+		% Date
+		\begin{textblock}{\bottomBoxWidth}(1, 8.1)
+			\begin{beamercolorbox}[wd=\linewidth, ht=.5cm, dp=.1cm, leftskip = 0cm]{title page date} 
+				\parbox[b][.5cm][t]{\linewidth}
+				{%
+					\usebeamerfont{title page date}%
+					\iftoggle{option@titlepagedate}{\insertdate}{}%
+				}
+			\end{beamercolorbox}
+		\end{textblock}
+	
+		% Background
+		\begin{tikzpicture}[remember picture, overlay]
+			\usebeamercolor{title page image}
+			\begin{scope}[on background layer]
+				% Gray Background
+				\fill[color=bg] (current page.north west) ++(0, -1.8) rectangle ++(16, -6.2);
+				
+				% Optional Background image
+				\ifx\inserttitlegraphic\empty %TODO: \ifdisplayablecontent always returns false here
+				\else
+					\fill[color=bg] (current page.north west) ++(8, -1.8) node[anchor=north west, inner sep=0] {\includegraphics[height=6.2cm]{\inserttitlegraphic}};
+				\fi
+			\end{scope}
+		\end{tikzpicture}
+	\fi
+
+	% Sidebar
+	\usebeamercolor{title page sidebar}
+	\usebeamertemplate*{sidebar}
+}
+
+% Table of contents
+\defbeamertemplate*{toc page}{hsmw}
+{
+	\hypersetup{hidelinks}
+	\frametitle{}
+		
+	\begin{textblock}{5}(0, 0)
+		\begin{beamercolorbox}[wd=\linewidth, ht=8cm]{toc page} 
+			%Background only
+		\end{beamercolorbox}
+	\end{textblock}
+
+	\begin{textblock}{3}(1, 0.5)
+		\begin{beamercolorbox}[wd=\linewidth, ht=.7cm, dp=.2cm]{toc page title} 
+			\usebeamerfont{toc page title}%
+			\autofontscaledownbox{\linewidth}{.7cm}{\contentsname}
+%			\parbox[b][7cm][t]{\linewidth}{\contentsname}
+		\end{beamercolorbox}
+	\end{textblock}
+				
+	\begin{textblock}{9}(6, 1)
+		\begin{beamercolorbox}[wd=\linewidth, ht=7cm]{toc page content} 
+			\usebeamerfont{toc page content}%
+			\parbox[b][7cm][t]{\linewidth}{%\vspace*{-\fill}
+			\tableofcontents}
+		\end{beamercolorbox}
+	\end{textblock}
+}
+\defbeamertemplate{toc page}{hsmw-simple}
+{
+	\frametitle{\contentsname}
+	\tableofcontents
+}
+
+% Section page
+\defbeamertemplate*{section page}{hsmw}
+{
+	\hypersetup{hidelinks}
+	
+	\begin{textblock}{16}(0, 0) % 10.67
+		\begin{beamercolorbox}[wd=\linewidth, ht=9cm]{section page} 
+			%Background only
+		\end{beamercolorbox}
+	\end{textblock}
+
+	\begin{textblock}{14}(1, 1)	% 9.67
+		\begin{beamercolorbox}[wd=\linewidth, ht=3cm]{section page title} 
+			\usebeamerfont{section page title}%
+			\insertsection
+		\end{beamercolorbox}
+	\end{textblock}
+	
+	\begin{textblock}{2}(.5, 4.25)
+		\begin{beamercolorbox}[wd=\linewidth, ht=.05cm]{section page rule} 
+			%rule only
+		\end{beamercolorbox}
+	\end{textblock}
+
+%	\tableofcontents[currentsection]
+}
+\defbeamertemplate{section page}{hsmw-simple}
+{
+	\hypersetup{hidelinks}
+	
+	%\beamer@headheight
+	\begin{textblock}{14}(1, 0)	% 9.67
+		\begin{beamercolorbox}[wd=\linewidth, ht=9cm]{frametitle} 
+			\usebeamerfont{frametitle}%
+			\parbox[b][9cm][c]{\textwidth}{\centering\insertsection\\\rule[.8\baselineskip]{\linewidth}{\arrayrulewidth}}
+		\end{beamercolorbox}
+	\end{textblock}
+}
+
+\defbeamertemplate*{subsection page}{hsmw}
+{
+	\hypersetup{hidelinks}
+	%\usebeamertemplate{section page}% should be more explicit (?)
+
+	\begin{textblock}{16}(0, 0) % 10.67
+		\begin{beamercolorbox}[wd=\linewidth, ht=9cm]{subsection page} 
+			%Background only
+		\end{beamercolorbox}
+	\end{textblock}
+
+	\begin{textblock}{14}(1, 1)	% 9.67
+		\begin{beamercolorbox}[wd=\linewidth, ht=3cm]{subsection page title} 
+			\usebeamerfont{section page title}%
+			\insertsection
+		\end{beamercolorbox}
+	\end{textblock}
+
+	\begin{textblock}{14}(1, 4.5)
+		\begin{beamercolorbox}[wd=\linewidth, dp=3cm]{subsection page subtitle} 
+			\usebeamerfont{subsection page subtitle}%
+			\insertsubsection
+		\end{beamercolorbox}
+	\end{textblock}
+	
+	\begin{textblock}{2}(.5, 4.25)
+		\begin{beamercolorbox}[wd=\linewidth, ht=.05cm]{subsection page rule} 
+			%rule only
+		\end{beamercolorbox}
+	\end{textblock}
+}
+
+% Thank you page
+\defbeamertemplate*{thankyou page}{hsmw}
+{
+	\hypersetup{hidelinks}
+	
+	\begin{textblock}{8.5}(1, 2.5)
+		\begin{beamercolorbox}[wd=\linewidth, ht=.8cm, dp=.2cm]{thankyou page title}
+			\parbox[b][.8cm]{\linewidth}
+			{
+				\usebeamerfont{thankyou page title}
+				\insertthankyoutitle
+			}
+		\end{beamercolorbox}
+	\end{textblock}
+
+	\begin{textblock}{8.5}(1, 4)
+		\begin{beamercolorbox}[wd=\linewidth, ht=4cm, dp=.1cm]{thankyou page text}
+			\begin{minipage}[b][4cm][t]{\linewidth}
+				\usebeamerfont{thankyou page text}
+				\raggedright
+				\insertthankyoutext
+			\end{minipage}
+		\end{beamercolorbox}
+	\end{textblock}
+
+	\begin{textblock}{5}(10.5, 4)
+		\begin{beamercolorbox}[wd=\linewidth, ht=2.5cm, dp=.1cm]{thankyou page sidebar text}
+			\begin{minipage}[b][2.5cm][t]{\linewidth}
+				\usebeamerfont{thankyou page sidebar text}
+				\raggedright
+				\insertthankyousidebartext
+			\end{minipage}
+		\end{beamercolorbox}
+	\end{textblock}
+
+	\begin{tikzpicture}[remember picture, overlay]
+		\begin{scope}[on background layer]
+			\node[inner sep=0, outer sep=0] (bg) at (current page.center) {\includegraphics[width=\paperwidth]{figures/thankyou.jpg}};
+			\fill[hsmw, fill opacity=.8] (current page.north west) rectangle (current page.south east);
+		\end{scope}
+	\end{tikzpicture}
+
+	\usebeamercolor{thankyou page sidebar}
+	\usebeamertemplate*{sidebar}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Adjust font size to better fit text into box if it gets too large
+\newlength{\autofontscaledownbox@maxHeight}
+\newlength{\autofontscaledownbox@boxHeight}
+\newsavebox{\autofontscaledown@box}
+
+%\usepackage{adjustbox}
+
+%TODO: Mit titleicon text ggf. länger als fenster und kein Umbruch... ebenfalls skalieren (z.B. "Verteidigungen" - bricht zeilenlänge, aber nicht höhe)
+\NewDocumentCommand{\autofontscaledownbox}{smmm} % printerror*, width, height, text
+{%
+%	\adjustbox{minipage=[b]{6.75cm},max totalheight=3.5cm}{#3}%
+	\setlength{\autofontscaledownbox@maxHeight}{#3}%
+	%
+	\foreach \f in {1, 0.99, ..., 0.1}%
+	{%
+		\pgfmathsetmacro{\scaledFontsize}{\f * \f@size}% \f@size = current font size
+		\pgfmathsetmacro{\scaledBaselineskip}{\scaledFontsize * 1.2}%
+		%
+		\savebox{\autofontscaledown@box}{\parbox[b]{#2}{\raggedright\fontsize{\scaledFontsize pt}{\scaledBaselineskip pt}\selectfont\nohyphens#4\par}}%
+		\setlength{\autofontscaledownbox@boxHeight}{\ht\autofontscaledown@box}%
+		%
+		\ifnum\autofontscaledownbox@boxHeight<\autofontscaledownbox@maxHeight%
+			\usebox{\autofontscaledown@box}%
+			\IfBooleanT{#1}{\if1\f\else{\PackageWarning{beamerinnerthemehsmw}{Font of text '#4' is scaled down by a factor of \f}}\fi}%
+			\breakforeach%
+		\fi%
+	}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%TODO: Check footnote hacks of old template
+
+%\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+%\setbeamerfont{footnote}{size=\tiny}
+%\setbeamerfont{footnote mark}{size=\tiny}
+%\renewcommand{\footnoterule}{\textcolor{gray!75}{\rule{1.5cm}{.3pt}\\[.5ex]}}
+%\renewcommand\@makefntext[1]{\noindent\makebox[0.35em][r]{\usebeamerfont{footnote}\color{gray!75}${}^{\mbox{\@thefnmark}}\hspace{-0.05em}$}\usebeamerfont{footnote}\textcolor{gray!75}{#1}}
+%\let\footnoteold\footnote
+%\renewcommand\footnote[2][]{
+%	\ifthenelse{\value{footnote}=0}
+%	{\footnoteold[#1]{\vspace{2.5mm}#2}}
+%	{\PackageWarningNoLine{beamerthemeMittweida.sty}{Nur eine Fussnote pro Seite erlaubt, zweite Fussnote wird ignoriert}}
+%}
+%\@addtoreset{footnote}{page}

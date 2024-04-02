@@ -1,0 +1,96 @@
+%size=\small
+%shape=\itshape
+%series=\bfseries
+%family=\sffamily
+
+%Adjust font series correctly
+%https://www.latex-project.org/help/documentation/fntguide.pdf
+%https://ctan.mc1.root.project-creative.net/fonts/opensans/doc/opensans.pdf
+\DeclareRobustCommand{\ltseries}{\fontseries{l}\selectfont}		% Open Sans Light
+%\NewDocumentCommand{\mdseries}{}{\fontseries{m}\selectfont}	% Open Sans Regular		= \mdseries (\textmd)
+\NewDocumentCommand{\sbseries}{}{\fontseries{sb}\selectfont}	% Open Sans Semi Bold
+%\NewDocumentCommand{\bxseries}{}{\fontseries{bx}\selectfont}	% Open Sans Bold		= \bfseries (\textbf)
+\NewDocumentCommand{\ebseries}{}{\fontseries{eb}\selectfont}	% Open Sans Extra Bold
+%
+\NewDocumentCommand{\lcseries}{}{\fontseries{lc}\selectfont}	% Open Sans Condensed Light
+\NewDocumentCommand{\bcseries}{}{\fontseries{bc}\selectfont}	% Open Sans Condensed Bold
+
+\DeclareTextFontCommand{\textlt}{\ltseries}	% Open Sans Light
+%\DeclareTextFontCommand{\textmd}{\mdseries}	% Open Sans Regular
+\DeclareTextFontCommand{\textsb}{\sbseries}	% Open Sans Semi Bold
+%\DeclareTextFontCommand{\textbx}{\bxseries}	% Open Sans Bold
+\DeclareTextFontCommand{\texteb}{\ebseries}	% Open Sans Extra Bold
+\DeclareTextFontCommand{\textlc}{\lcseries}	% Open Sans Condensed Light
+\DeclareTextFontCommand{\textbc}{\bcseries}	% Open Sans Condensed Bold
+
+%Predefined sizes on default 11pt font size
+%\TINY			3	% ONLY BEAMER	% used for ppt sizes: 
+%\Tiny			4	% ONLY BEAMER	% used for ppt sizes: 7
+%\tiny			6					% used for ppt sizes: 8, 10.5
+%\scriptsize	8					% used for ppt sizes: 13
+%\footnotesize	9					% used for ppt sizes: 14, 16
+%\small			10					% used for ppt sizes: 18, 20
+%\normalsize	10.95				% used for ppt sizes: 24
+%\large			12					% used for ppt sizes: 32
+%\Large			14.4				% used for ppt sizes: 
+%\LARGE			17.28				% used for ppt sizes: 
+%\huge			20.74				% used for ppt sizes: 48
+%\Huge			24.88				% used for ppt sizes: 60, 64
+
+%TODO TOC
+%agenda titel	48		ja
+%Agenda 1	24		nein
+%Agenda 2	20		nein
+%Agenda 3	16		nein
+%Agenda 4	14		ja
+%end title	60		ja
+%end text	14		nein
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\setbeamerfont{titlelike}{series=\bfseries}
+\setbeamerfont{title page title}{series=\ebseries, size=\Huge}
+\setbeamerfont{title page subtitle}{parent=titlelike, size=\large}
+\setbeamerfont{title page subsubtitle}{size=\small}
+\setbeamerfont{title page date}{series=\ltseries, size=\footnotesize}
+\setbeamerfont{title page sidebar}{parent=titlelike, size=\scriptsize}
+\setbeamerfont{title page faculty}{series=\bfseries, size=\footnotesize} 
+
+% TOC page
+\setbeamerfont{toc page title}{parent=titlelike, size=\huge}
+\setbeamerfont{toc page content}{parent=normal text}
+
+\setbeamerfont{section page title}{parent=titlelike, size=\huge} % \Huge
+\setbeamerfont{subsection page subtitle}{parent=titlelike, size=\Large}
+
+\setbeamerfont{thankyou page title}{parent=titlelike, size=\Huge}
+\setbeamerfont{thankyou page text}{size=\footnotesize}
+\setbeamerfont{thankyou page sidebar text}{size=\scriptsize}
+
+\setbeamerfont{frametitle}{parent=titlelike, size=\huge}
+\setbeamerfont{framesubtitle}{size=\footnotesize}
+
+\setbeamerfont{normal text}{size=\normalsize}
+\setbeamerfont{item}{size=\normalsize}
+\setbeamerfont{subitem}{size=\small}
+\setbeamerfont{subsubitem}{size=\footnotesize}
+\setbeamerfont{caption}{size=\footnotesize}
+
+\setbeamerfont{footline title}{series=\bfseries, size=\tiny}
+\setbeamerfont{footline date}{series=\bfseries, size=\Tiny}
+\setbeamerfont{footline number current}{series=\sbseries, size=\Large}
+\setbeamerfont{footline number overall}{size=\tiny}
+\setbeamerfont{footline faculty}{series=\bfseries, size=\Tiny}
+
+\setbeamerfont{note page}{size=\small}
+\setbeamerfont{note page watermark}{size=\small\ebseries}
+\setbeamerfont{note page pagenumber}{size=\tiny}
+
+%\setbeamerfont{bibliography item}{size=\footnotesize}
+%\setbeamerfont{bibliography entry author}{size=\footnotesize}
+%\setbeamerfont{bibliography entry title}{size=\footnotesize}
+%\setbeamerfont{bibliography entry location}{size=\footnotesize}
+%\setbeamerfont{bibliography entry note}{size=\footnotesize}
+\ifdef{\bibfont}{\renewcommand*{\bibfont}{\footnotesize}}{}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
