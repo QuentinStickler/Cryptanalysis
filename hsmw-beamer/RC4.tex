@@ -9,9 +9,9 @@
 % 1) Load the desired presentation theme
 \usetheme[
 % Individual options to customize the presentation conforming to the corporate design
-	hs,					% Change default faculty color set and predefined faculty values: hs or <empty> (default), inw, cb, me, sw, wi, inst (\renewcommand{\insertfacultyname}{Institutname} needed)
-%	language=english,	% Change language to english (default: ngerman), other languages are possible (see babel-package) but may need further adjustments 
-%	toc,				% Adds a ToC slide
+	cb,					% Change default faculty color set and predefined faculty values: hs or <empty> (default), inw, cb, me, sw, wi, inst (\renewcommand{\insertfacultyname}{Institutname} needed)
+	language=english,	% Change language to english (default: ngerman), other languages are possible (see babel-package) but may need further adjustments 
+	toc,				% Adds a ToC slide
 %	sectionslide,		% Display separate section slides
 %	subsectionslide,		% Display separate subsection slides containing section and subsection name
 %	smallpagenumber,	% Reduces the size of the page number
@@ -21,25 +21,25 @@
 %	printhandout,		% Places two slides on a single a4 paper for printing the presentation (beamer class option 'handout' needed)
 %	noframesubtitle,	% Disables frame subtitles alltogether and slightly increases frame height
 % Additional style options not completely conforming to the corporate design
-%	titlepagedate,		% Shows the date on the titelpage
+	titlepagedate,		% Shows the date on the titelpage
 %	fancystyle,			% Enables some fancy styles, that are not part of the corporate design specifications (default: off)
-%	progressbar,		% Shows the progressbar in footline (run twice to update progressbar)
+	progressbar,		% Shows the progressbar in footline (run twice to update progressbar)
 	]{hsmw} 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 2) Specify default fields for presentation and pdf document properties
 % Set the title: \title{Long title everywhere} or \title[Short title for footline]{Long title for titlepage}
-\title[Neue \LaTeX-Vorlage]{RC4 Algorithmus}
+\title[RC4-Algorithmus]{RC4 Algorithmus}
 % Authors (separate multiple author names e.g. with \and for additional space): \author{author for everywhere} or \author[author for footline]{author for titlepage and thankyouslide}
-\author[Stefan Schildbach]{Quentin Stickler, B.Sc.}
+\author[Quentin Stickler]{Quentin Stickler, B.Sc.}
 % Institute (will be prefilled automatically, depending on chosen faculty theme option): \institute{institute for everywhere} or \institute[institute for footline and thankyouslide]{institute for titlepage}
 %\institute[institute for footline and thankyouslide]{institute for titlepage}
 % Date of presentation (\today or a fixed value): \date{date for everywhere} or \date[date for footline]{date for titlepage}
-%\date{\today} % 22. März 2022
+\date{\today} % 22. März 2022
 % Impressum for thankyou slide (leave one empty if not wanted or needed):
-\email{schildba@hs-mittweida.de} % \email{E-Mail}
-\phone{+49 3727 58-1598} % \phone[Mobile Number]{Telephone Number}
-\office{Haus 8 | Richard Stücklen-Bau | Raum 8-207\newline Am Schwanenteich 6b | 09648 Mittweida} % \office{Office}
+\email{qstickle@hs-mittweida.de} % \email{E-Mail}
+%\phone{+49 3727 58-1598} % \phone[Mobile Number]{Telephone Number}
+%\office{Haus 8 | Richard Stücklen-Bau | Raum 8-207\newline Am Schwanenteich 6b | 09648 Mittweida} % \office{Office}
 %\courseofstudies{Informatik (IF10w1-M)} % \courseofstudies{Course of Studies (Group Number)}
 %\additional[Sidebar Text]{Main Text} % Additional information you may want to give (Department, Module, etc.) \additional[Sidebar Text]{Main Text}
 
@@ -81,7 +81,7 @@
 
 	\section{Grundlegende Verwendung}
 
-	\begin{frame}[fragile]{History}{1980}
+	\begin{frame}[fragile]{General Information}{What is it?}
 		Blablabla
 
 		\scriptsize
