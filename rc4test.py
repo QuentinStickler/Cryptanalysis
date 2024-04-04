@@ -5,9 +5,8 @@ File for testing the RC4 algorithm and also trying to crack it
 '''
 
 ###Here, we initialize our S-Box with values from 0-255 and our T-Box, which just contains repeated values of our given key 256 times
-def initialize(plaintext):
+def initialize(plaintext, key):
     S = [0] * 256
-    key = "Supersicherer Key"            ###Enter your key here
     asciikey = []
     T = [0] * 256
 
@@ -20,7 +19,7 @@ def initialize(plaintext):
         S[x] = x
         T[x] = asciikey[x % keylength]
 
-    permutation(S,T,plaintext)
+    return permutation(S,T,plaintext)
 
 ###Here, we use our initialized S-Box and T-Box to permutate the S-Box
 ###It will then include all values from 0-256 still, but now in a (pseudo-)random order dependent on our given key
@@ -31,7 +30,7 @@ def permutation(S,T,plaintext):
         currentvalue = S[i]
         S[i] = S[j]
         S[j] = currentvalue
-    generatestream(S, plaintext)
+    return generatestream(S, plaintext)
 
 
 def generatestream(S, plaintext):
@@ -52,19 +51,20 @@ def generatestream(S, plaintext):
         S[j] = currentValue
         t = (S[i] + S[j]) % 256
         keystream.append(S[t])
-
-    ciphertext = encrypt(asciiplaintext, keystream)
-    decrypt(ciphertext, keystream)
+    return keystream
 
 def encrypt(asciiplaintext, keystream):
-
     encryptedlist = []
     for x,y in zip(asciiplaintext,keystream):
-        encryptedlist.append(chr(x^y))
-    return encryptedlist
+        encryptedlist.append(chr(ord(x)^y))
+
+    result = ""
+    for val in encryptedlist:
+        result += val
+    print(result)
+
 
 def decrypt(ciphertext, keystream):
-
     decryptedlist = []
     for x,y in zip(ciphertext,keystream):
         decryptedlist.append(chr(ord(x)^y))
@@ -72,7 +72,22 @@ def decrypt(ciphertext, keystream):
     for value in decryptedlist:
         result += value
     print(result)
-    return result
 
-plaintext = "Plaintext"
-initialize(plaintext)
+
+def main():
+    mode = input("Do you want to encrypt ('E') or decrypt ('D')?")
+    if(mode == "E"):
+        plaintext = input("Please enter the text you want to encrypt: ")
+        key = input("Pleas enter your key: ")
+        keystream = initialize(plaintext, key)
+        encrypt(plaintext, keystream)
+    elif(mode == "D"):
+        ciphertext = input("Please enter the text you want to decrypt: ")  
+        key = input("Pleas enter your key: ")
+        keystream = initialize(ciphertext, key)
+        decrypt(ciphertext, keystream)
+    else:
+        print("Wrong input")
+    return
+
+main()
