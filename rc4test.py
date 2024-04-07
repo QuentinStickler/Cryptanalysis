@@ -90,4 +90,47 @@ def main():
         print("Wrong input")
     return
 
-main()
+
+#main()
+
+
+####################TEST-AREA##############################
+
+
+def testinitialize(plaintext, key):
+    S = [0] * 256
+    asciikey = []
+    T = [0] * 256
+
+    for c in key:                   ###Create ascii list from key 
+        asciikey.append(ord(c))
+    keylength = len(asciikey)
+
+
+    for x in range(256):            ###Initilaze S-Box and T-Box
+        S[x] = x
+        T[x] = asciikey[x % keylength]
+
+    # result = [value for value in T]
+    # print(result)
+
+    return testpermutation(S,T,plaintext)
+
+def testpermutation(S,T,plaintext):
+    j = 0
+    for i in range(256):
+        j = (j + S[i] + T[i]) % 256
+        currentvalue = S[i]
+        S[i] = S[j]
+        S[j] = currentvalue
+    result = [value for value in S]
+    print(result)
+    
+    #return generatestream(S, plaintext)
+
+def maintest():
+    plaintext = "TestText"
+    key= "TestKey"
+    testinitialize(plaintext, key)
+
+maintest()
