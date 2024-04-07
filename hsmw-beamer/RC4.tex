@@ -29,7 +29,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 2) Specify default fields for presentation and pdf document properties
 % Set the title: \title{Long title everywhere} or \title[Short title for footline]{Long title for titlepage}
-\title[RC4-Algorithmus]{RC4 Algorithmus}
+\title[RC4-Algorithmus]{RC4 Algorithm}
 % Authors (separate multiple author names e.g. with \and for additional space): \author{author for everywhere} or \author[author for footline]{author for titlepage and thankyouslide}
 \author[Quentin Stickler]{Quentin Stickler, B.Sc.}
 % Institute (will be prefilled automatically, depending on chosen faculty theme option): \institute{institute for everywhere} or \institute[institute for footline and thankyouslide]{institute for titlepage}
@@ -168,12 +168,12 @@
 		\item S-Box Initialization:
 		\medskip
 		$\begin{array}{|ccccccc|}
-		0 & 1 & 2 & 3 & 4 & 5 & 6 \\
+		\textcolor{green}{0} & 1 & 2 & 3 & 4 & 5 & 6 \\
 		\dots & \dots & \dots & \dots & \dots & \dots & \dots \\
 		249 & 250 & 251 & 252 & 253 & 254 & 255 \\
 		\end{array}$
-		\item i = 0
-		\item j = (\textcolor{blue} {j} + \textcolor{green}{S[i]} + \textcolor{red}{T[i]} mod(256))
+		\item i = \textcolor{green}{0}
+		\item j = (\textcolor{blue} {j} + \textcolor{green}{S[i]} + \textcolor{red}{T[i]}) mod(256)
 		\item j = (\textcolor{blue} {84} + \textcolor{green} {0} + \textcolor{red} {84}) mod(256) = 168 mod (256) = 168
 		\item Swap S[i] (0) and S[j] (84)
 		\item S[i] = 84, S[j] = 0
@@ -189,8 +189,8 @@
 		249 & 250 & 251 & 252 & 253 & 254 & 255 \\
 	\end{array}$
 	\begin{itemize}
-		\item i = 1
-		\item j = (\textcolor{blue} {j} + \textcolor{green}{S[i]} + \textcolor{red}{T[i]} mod(256))
+		\item i = \textcolor{green}{1}
+		\item j = (\textcolor{blue} {j} + \textcolor{green}{S[i]} + \textcolor{red}{T[i]}) mod(256)
 		\item j = (\textcolor{blue} {186} + \textcolor{green} {1} + \textcolor{red} {101}) mod(256) = 288 mod (256) = 32
 		\item Swap S[i] (1) and S[j] (186)
 		\item S[i] = 186, S[j] = 1
@@ -206,35 +206,104 @@
 		249 & 250 & 251 & 252 & 253 & 254 & 255 \\
 	\end{array}$
 	\begin{itemize}
-		\item i = 2
-		\item j = (\textcolor{blue} {j} + \textcolor{green}{S[i]} + \textcolor{red}{T[i]} mod(256))
+		\item i = \textcolor{green}{2}
+		\item j = (\textcolor{blue} {j} + \textcolor{green}{S[i]}) + \textcolor{red}{T[i]} mod(256)
 		\item j = (\textcolor{blue} {47} + \textcolor{green} {2} + \textcolor{red} {115}) mod(256) = 126 mod (256) = 126
 		\item Swap S[i] (1) and S[j] (47)
 		\item S[i] = 47, S[j] = 2
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Final Permutation}
-	\small
+\begin{frame}{Permutation Example}{Final S-Box Form}
+	\tiny
+	\bigskip
+	\centering
 	$\begin{array}{|cccccccccccccccc|}
 		84& 186& 47& 208& 12& 95& 222& 212& 71& 9& 26& 246& 103& 38& 28& 165 \\
 		138 & 68 & 130 & 10 & 50 & 143 & 72 & 155 & 39 & 139 & 112 & 16 & 79 & 78 & 196 & 146 \\
-		216, 179, 159, 178, 34, 119, 59, 56, 63, 183, 53, 197, 100, 236, 101, 4 \\
-		176, 250, 116, 67, 5, 60, 194, 35, 105, 87, 118, 218, 97, 168, 1, 77, \\
-		44, 229, 25, 48, 141, 42, 175, 91, 94, 211, 121, 169, 215, 89, 99, 24 \\
-		98, 164, 181, 129, 255, 185, 110, 8, 220, 154, 109, 219, 201, 153, 120, 62, \\
-		51, 0, 217, 37, 20, 226, 43, 127, 170, 227, 243, 249, 133, 126, 161, 156 \\
-		82, 167, 140, 115, 145, 74, 182, 83, 184, 104, 189, 81, 52, 233, 172, 245 \\
-		157, 66, 124, 177, 102, 80, 147, 171, 106, 162, 70, 30, 199, 6, 69, 18 \\
-		173, 45, 32, 88, 125, 221, 7, 65, 75, 158, 232, 128, 237, 190, 108, 248, \\
-		13, 144, 2, 46, 49, 31, 134, 123, 92, 40, 114, 254, 131, 213, 41, 93 \\
-		117, 253, 23, 137, 234, 209, 224, 136, 107, 90, 202, 223, 132, 27, 15, 207, \\
-		73, 195, 239, 64, 206, 251, 149, 228, 231, 166, 187, 214, 86, 242, 191, 76, \\
-		192, 58, 142, 61, 57, 193, 33, 244, 180, 205, 111, 3, 122, 36, 22, 14, \\
-		240, 252, 238, 188, 247, 85, 203, 174, 200, 11, 148, 152, 160, 230, 210, 29 \\
-		96, 235, 163, 150, 17, 204, 54, 55, 198, 151, 225, 21, 135, 113, 19, 241 \\
+		216 & 179 & 159 & 178 & 34 & 119 & 59 & 56 & 63 & 183 & 53 & 197 & 100 & 236 & 101 & 4 \\
+		176 & 250 & 116 & 67 & 5 & 60 & 194 & 35 & 105 & 87 & 118 & 218 & 97 & 168 & 1 & 77 \\
+		44 & 229 & 25 & 48 & 141 & 42 & 175 & 91 & 94 & 211 & 121 & 169 & 215 & 89 & 99 & 24 \\
+		98 & 164 & 181 & 129 & 255 & 185 & 110 & 8 & 220 & 154 & 109 & 219 & 201 & 153 & 120 & 62 \\
+		51 & 0 & 217 & 37 & 20 & 226 & 43 & 127 & 170 & 227 & 243 & 249 & 133 & 126 & 161 & 156 \\
+		82 & 167 & 140 & 115 & 145 & 74 & 182 & 83 & 184 & 104 & 189 & 81 & 52 & 233 & 172 & 245 \\
+		157 & 66 & 124 & 177 & 102 & 80 & 147 & 171 & 106 & 162 & 70 & 30 & 199 & 6 & 69 & 18 \\
+		173 & 45 & 32 & 88 & 125 & 221 & 7 & 65 & 75 & 158 & 232 & 128 & 237 & 190 & 108 & 248 \\
+		13 & 144 & 2 & 46 & 49 & 31 & 134 & 123 & 92 & 40 & 114 & 254 & 131 & 213 & 41 & 93 \\
+		117 & 253 & 23 & 137 & 234 & 209 & 224 & 136 & 107 & 90 & 202 & 223 & 132 & 27 & 15 & 207 \\
+		73 & 195 & 239 & 64 & 206 & 251 & 149 & 228 & 231 & 166 & 187 & 214 & 86 & 242 & 191 & 76 \\
+		192 & 58 & 142 & 61 & 57 & 193 & 33 & 244 & 180 & 205 & 111 & 3 & 122 & 36 & 22 & 14 \\
+		240 & 252 & 238 & 188 & 247 & 85 & 203 & 174 & 200 & 11 & 148 & 152 & 160 & 230 & 210 & 29 \\
+		96 & 235 & 163 & 150 & 17 & 204 & 54 & 55 & 198 & 151 & 225 & 21 & 135 & 113 & 19 & 241 \\
 	\end{array}$
 	\normalsize
+	\begin{itemize}
+		\item Result = Permutated S-Box
+		\item All numbers from 0-255 in "random" places
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Keystream Generator}
+	\begin{itemize}
+		\item Generate keystream depending on length of given plaintext
+		\begin{python}
+   			for x in range(plaintextlength):
+				i = (i + 1) % 256
+				j = (j + S[i]) % 256
+				currentValue = S[i]
+				S[i] = S[j]
+				S[j] = currentValue
+				t = (S[i] + S[j]) % 256
+				keystream.append(S[t])
+    		return keystream
+		\end{python}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Keystream Generator}{Example, i = 0}
+	\begin{itemize}
+		\item i = 0, j = 0
+		\item i = (0 + 1) mod 256 = 1
+		\item j = (0 + S[i]) mod 256 = 186 mod 256 = 186
+		\item Swap S[i] (186) and S[j] (202)
+		\item t = (S[i] + S[j]) mod 256 = 388 mod 256 = 132
+		\item keystream = [132, ]
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Keystream Generator}{Example, i = 1}
+	\begin{itemize}
+		\item i = 1, j = 186
+		\item i = (1 + 1) mod 256 = 2
+		\item j = (186 + 47) mod 256 = 233 mod 256 = 233
+		\item Swap S[i] (47) and S[j] (11)
+		\item t = (47 + 11) mod 256 = 58 mod 256 = 58
+		\item keystream = [132, 58, ]
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Keystream Generator}{Example, i = 2}
+	\begin{itemize}
+		\item i = 2, j = 233
+		\item i = (2 + 1) mod 256 = 3
+		\item j = (233 + 208) mod 256 = 451 mod 256 = 185
+		\item Swap S[i] (208) and S[j] (90)
+		\item t = (208 + 90) mod 256 = 298 mod 256 = 42
+		\item keystream = [132, 58, 42, ....]
+		\item Final keystream = [132, 58, 42, 7, 129, 233, 245, 149]
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Encryption}
+	\begin{itemize}
+		\item Plaintext XOR keystream
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Decryption}
+	\begin{itemize}
+		\item Ciphertext XOR keystream
+	\end{itemize}
 \end{frame}
 
 	\section{Benutzerdefinierte Anpassungen}

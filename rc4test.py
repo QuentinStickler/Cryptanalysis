@@ -123,10 +123,40 @@ def testpermutation(S,T,plaintext):
         currentvalue = S[i]
         S[i] = S[j]
         S[j] = currentvalue
-    result = [value for value in S]
-    print(result)
+    # result = [value for value in S]
+    # print(result)
+    return testgeneratestream(S, plaintext)
+
+def testgeneratestream(S, plaintext):
+    i = 0
+    j = 0
+
+    asciiplaintext = []
+    for c in plaintext:                   
+        asciiplaintext.append(ord(c))
+    plaintextlength = len(asciiplaintext)
+    keystream = []
+
+    for x in range(plaintextlength):
+        print(f"i:{i}")
+        print(f"j:{j}")
+        i = (i + 1) % 256
+        j = (j + S[i]) % 256
+        print(f"i:{i}")
+        print(f"j:{j}")
+        print(f"S[i] = {S[i]}")
+        print(f"S[j] = {S[j]}")
+        currentValue = S[i]
+        S[i] = S[j]
+        S[j] = currentValue
+        t = (S[i] + S[j]) % 256
+        print(f"t = {t}")
+        print("#########")
+        keystream.append(S[t])
     
-    #return generatestream(S, plaintext)
+    # for v in keystream:
+    #     print(v)
+    return keystream
 
 def maintest():
     plaintext = "TestText"
