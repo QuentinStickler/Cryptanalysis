@@ -264,9 +264,9 @@
 	\begin{itemize}
 		\item i = 0, j = 0
 		\item i = (0 + 1) mod 256 = 1
-		\item j = (0 + S[i]) mod 256 = 186 mod 256 = 186
+		\item j = (0 + 186) mod 256 = 186 mod 256 = 186
 		\item Swap S[i] (186) and S[j] (202)
-		\item t = (S[i] + S[j]) mod 256 = 388 mod 256 = 132
+		\item t = (202 + 186) mod 256 = 388 mod 256 = 132
 		\item keystream = [132, ]
 	\end{itemize}
 \end{frame}
@@ -297,23 +297,50 @@
 \begin{frame}[fragile]{Encryption}
 	\begin{itemize}
 		\item Plaintext XOR keystream
+		\item Plaintext = "TestText"
+		\item Ascii: 
 	\end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Decryption}
 	\begin{itemize}
 		\item Ciphertext XOR keystream
+		\item 
 	\end{itemize}
 \end{frame}
 
-	\section{Benutzerdefinierte Anpassungen}
+\begin{frame}[fragile]{Attacks on RC4}
+	\begin{itemize}
+		\item Lorem ipsum
+	\end{itemize}
+\end{frame}
 
-	\section{FAQ}
+\begin{frame}[fragile]{WEP}{Short summary}
+	\begin{itemize}
+		\item Lorem ipsum
+	\end{itemize}
+\end{frame}
 
-	\appendix
-	\makethankyou
+\begin{frame}[fragile]{Attacking RC4 in WEP}
+	\begin{itemize}
+		\item Lorem ipsum
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Prevention against this attack}
+	\begin{itemize}
+		\item Lorem ipsum
+	\end{itemize}
+\end{frame}
+
+\section{Benutzerdefinierte Anpassungen}
+
+\section{FAQ}
+
+\appendix
+\makethankyou
 %	\makebibliography
 
-	\section{\appendixname}
+\section{\appendixname}
 
 \end{document}
