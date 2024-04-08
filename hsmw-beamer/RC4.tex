@@ -81,6 +81,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
+\section{General info}
 
 \begin{frame}[fragile]{The Rise and Fall of RC4}{Why it's not really used anymore}
 	\begin{itemize}
@@ -94,7 +95,7 @@
 	\end{itemize}
 \end{frame}
 
-
+\section{RC4 Algorithm in detail}
 
 \begin{frame}[fragile]{RC4 Algorithm}{How does it work?}
 	\begin{itemize}
@@ -295,19 +296,36 @@
 \end{frame}
 
 \begin{frame}[fragile]{Encryption}
+	\small
 	\begin{itemize}
 		\item Plaintext XOR keystream
-		\item Plaintext = "TestText"
-		\item Ascii: 
+		\item Plaintext = "TestText" = [84, 101, 115, 116, 84, 101, 120, 116]
+		\item Binary: 01010100 01100101 01110011 01110100 01010100 01100101 01111000 01110100
+		\item Keystream = [132, 58, 42, 7, 129, 233, 245, 149]
+		\item = 10000100 0111010 00101010 0000111 10000001 11101001 11110101 10010101
+		\item 01010100 01100101 01110011 01110100 01010100 01100101 01111000 01110100 XOR
+		\item 10000100 00111010 00101010 00000111 10000001 11101001 11110101 10010101 = 
+		\item 11010000 01011111 01011001 01110011 11010101 10001100 10001101 11100001
 	\end{itemize}
+	\normalsize
 \end{frame}
 
 \begin{frame}[fragile]{Decryption}
+	\small
 	\begin{itemize}
 		\item Ciphertext XOR keystream
-		\item 
+		\item Plaintext = "TestText"
+		\item Binary: 01010100 01100101 01110011 01110100 01010100 01100101 01111000 01110100
+		\item Keystream = [132, 58, 42, 7, 129, 233, 245, 149] =
+		\item 10000100 0111010 00101010 0000111 10000001 11101001 11110101 10010101
+		\item 01010100 01100101 01110011 01110100 01010100 01100101 01111000 01110100 XOR
+		\item 10000100 00111010 00101010 00000111 10000001 11101001 11110101 10010101 = 
+		\item 11010000 01011111 01011001 01110011 11010101 10001100 10001101 11100001
 	\end{itemize}
+	\normalsize
 \end{frame}
+
+\section{Attacking RC4}
 
 \begin{frame}[fragile]{Attacks on RC4}
 	\begin{itemize}
@@ -332,10 +350,6 @@
 		\item Lorem ipsum
 	\end{itemize}
 \end{frame}
-
-\section{Benutzerdefinierte Anpassungen}
-
-\section{FAQ}
 
 \appendix
 \makethankyou

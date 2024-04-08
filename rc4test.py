@@ -92,6 +92,8 @@ def main():
 
 
 #main()
+for c in "TestText":
+    print(ord(c))
 
 
 ####################TEST-AREA##############################
@@ -138,29 +140,40 @@ def testgeneratestream(S, plaintext):
     keystream = []
 
     for x in range(plaintextlength):
-        print(f"i:{i}")
-        print(f"j:{j}")
+        # print(f"i:{i}")
+        # print(f"j:{j}")
         i = (i + 1) % 256
         j = (j + S[i]) % 256
-        print(f"i:{i}")
-        print(f"j:{j}")
-        print(f"S[i] = {S[i]}")
-        print(f"S[j] = {S[j]}")
+        # print(f"i:{i}")
+        # print(f"j:{j}")
+        # print(f"S[i] = {S[i]}")
+        # print(f"S[j] = {S[j]}")
         currentValue = S[i]
         S[i] = S[j]
         S[j] = currentValue
         t = (S[i] + S[j]) % 256
-        print(f"t = {t}")
-        print("#########")
+        # print(f"t = {t}")
+        # print("#########")
         keystream.append(S[t])
     
     # for v in keystream:
     #     print(v)
-    return keystream
+    return asciiplaintext, keystream
+
+def testencrypt(asciiplaintext, keystream):
+    encryptedlist = []
+    for x,y in zip(asciiplaintext,keystream):
+        encryptedlist.append(chr(ord(str(x))^y))
+
+    result = ""
+    for val in encryptedlist:
+        result += val
+    print(result)
 
 def maintest():
     plaintext = "TestText"
     key= "TestKey"
-    testinitialize(plaintext, key)
+    asciiplaintext, keystream = testinitialize(plaintext, key)
+    testencrypt(asciiplaintext, keystream)
 
-maintest()
+#maintest()
