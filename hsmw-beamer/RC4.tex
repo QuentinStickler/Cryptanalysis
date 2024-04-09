@@ -345,6 +345,19 @@
 	\end{itemize}
 \end{frame}
 
+\begin{frame} 
+	\frametitle{Recovery of unknwon bytes} 
+	\begin{theorem}
+		Let $ K\textsubscript{n} $ be the RC4 key value at position $ n $. Let $ IV\textsubscript{n} $ be a tuple of $ (n, N-1, V) $,
+		where $ N = 256 $ and  $ V \in {{0,\dots,255}}, n \geq 3 $ and $ k\textsubscript{n} $ the known keystreambyte at position $n$.
+		Then $ K\textsubscript{n} = k\textsubscript{n} - \sum_{1}^{n}x - V - (\sum_{3}^{n}K\textsubscript{n}) $ 
+	\end{theorem} 
+	\begin{itemize}
+		\item How many IVs are sufficient to determine $ K\textsubscript{n} $?
+		\item Determine probability that $ S\textsubscript{0}, S\textsubscript{1}, S\textsubscript{3} $ remain unchanged
+	\end{itemize}
+\end{frame}
+
 \begin{frame}[fragile]{Prevention against this attack}
 	\begin{itemize}
 		\item Lorem ipsum
