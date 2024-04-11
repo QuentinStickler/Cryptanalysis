@@ -327,10 +327,150 @@
 
 \section{Attacking RC4}
 
-\begin{frame}[fragile]{Attacks on RC4}
+\begin{frame}[fragile]{Attacks on RC4}{General process}
 	\begin{itemize}
-		\item Lorem ipsum
+		\item Cryptanalysis Trudy graps a lot of transfered data
+		\item Tries to catch IVs of specific forms 
+		\item Goal $\rightarrow$ Recover the long-term key $\rightarrow$ Then she can decrypt all the ciphertexts
+		\item Example: $ IV = (3, N-1, V)$ , where $N-1 = 255, V$ any value ${1,\dots,255}$
+		\item Long-term-key of the form $(3, 255, V, K\textsubscript{3}, K\textsubscript{4},K\textsubscript{5})$
+		\item $K\textsubscript{3}, K\textsubscript{4},K\textsubscript{5}$ are the first unknown keybytes
+		\item Clue is in the initialization phase
 	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Attacks on RC4}{Example for K\textsubscript{3}}
+	\begin{itemize}
+		\item Suppose, Trudy has recoverd $IV = (\textcolor{red}{3}, 255, V)$ 
+		\item Used for recovering Example for $K\textsubscript{\textcolor{red}{3}}$
+		\item Let's look at our S-Box during the initialization phase
+		\item First, $S$ is set to the identitity permutation
+		\medskip
+		\begin{table}[h!]
+			\begin{center}
+			  \label{tab:table1}
+			  \begin{tabular}{l|c|c|c|c|c|c|r}
+				$i$ & 0 & 1 & 2 & 3 & 4 & 5 & \dots\\
+				\hline
+				$S\textsubscript{i}$ & 0 & 1 & 2 & 3 & 4 & 5 & \dots\\
+			  \end{tabular}
+			\end{center}
+		  \end{table}
+
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Attacks on RC4}{Example for K\textsubscript{3}}
+	\begin{itemize}
+		\item Now, at the first step $i=0$, we compute the next $j$
+		\item $j = j + S\textsubscript{i} + K\textsubscript{1} = 0 + 0 + 3$ $mod(256) = 3$
+		\item Thus, the elements at position $S\textsubscript{i}$ and $S\textsubscript{j}$ are swapped
+		\medskip
+		\begin{table}[h!]
+			\begin{center}
+			  \label{tab:table2}
+			  \begin{tabular}{l|c|c|c|c|c|c|r}
+				$i$ & 0 & 1 & 2 & 3 & 4 & 5 & \dots\\
+				\hline
+				$S\textsubscript{i}$ & \textcolor{green}{3} & 1 & 2 & \textcolor{green}{0} & 4 & 5 & \dots\\
+			  \end{tabular}
+			\end{center}
+		  \end{table}
+		\item At the next step $i = 1$, we compute $j$ as
+		\item $j = 3 + S\textsubscript{i} + K\textsubscript{i} = 3 + 1 + 255$ $mod(256) = 3$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Attacks on RC4}{Example for K\textsubscript{3} Cont'd}
+
+	\begin{table}[h!]
+		\begin{center}
+			\label{tab:table3}
+			\begin{tabular}{l|c|c|c|c|c|c|r}
+			$i$ & 0 & 1 & 2 & 3 & 4 & 5 & \dots\\
+			\hline
+			$S\textsubscript{i}$ & 3 & \textcolor{green}{0} & 2 & \textcolor{green}{1} & 4 & 5 & \dots\\
+			\end{tabular}
+		\end{center}
+	\end{table}
+
+	\begin{itemize}
+		\item At the next step $i = 2$, we compute $j$ as
+		\item $j = 3 + S\textsubscript{2} + K\textsubscript{2} = 3 + 2 + V$ $mod(256) = 5+V$
+	\end{itemize}
+
+	\begin{table}[h!]
+		\begin{center}
+			\label{tab:table4}
+			\begin{tabular}{l|c|c|c|c|c|c|c|c|r}
+			$i$ & 0 & 1 & 2 & 3 & 4 & 5 & \dots & 5 + V & \dots\\
+			\hline
+			$S\textsubscript{i}$ & 3 & 0 & \textcolor{green}{5 + V} & 1 & 4 & 5 & \dots & \textcolor{green}{2} & \dots\\
+			\end{tabular}
+		\end{center}
+	\end{table}
+
+\end{frame}
+
+\begin{frame}[fragile]{Attacks on RC4}{Example for K\textsubscript{3}: Last step}
+
+	
+	\begin{itemize}
+		\item At the next step $i = 3$, we compute $j$ as
+		\item $j = 5 + V + S\textsubscript{3} + K\textsubscript{3} = 5 + V + 1 + K\textsubscript{3}$ $mod(256) = 6 + V + K\textsubscript{3}$
+	\end{itemize}
+	
+	\begin{table}[h!]
+		\begin{center}
+			\label{tab:table5}
+			\begin{tabular}{l|c|c|c|c|c|c|c|c|c|c|r}
+			$i$ & 0 & 1 & 2 & 3 & 4 & 5 & \dots & 5 + V & \dots & 6 + V + K\textsubscript{3} & \dots\\
+			\hline
+			$S\textsubscript{i}$ & 3 & 0 & 5 + V & \textcolor{green}{6 + V + K\textsubscript{3}} & 4 & 5 & \dots & 2 & \dots & \textcolor{green}{1} & \dots\\
+			\end{tabular}
+		\end{center}
+	\end{table}
+
+	\begin{itemize}
+		\item Suppose$ S\textsubscript{0}, S\textsubscript{1} and S\textsubscript{3}$ will remain unchanged until step $i = 255$
+		\item Then, the first keystreambyte will be computed following the keystream generator algorithm
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{RC4 Attack}{Recover $K\textsubscript{3}$}
+
+	\begin{python}
+		for x in range(plaintextlength):
+			i = (i + 1) % 256
+			j = (j + S[i]) % 256
+			currentValue = S[i]
+			S[i] = S[j]
+			S[j] = currentValue
+			t = (S[i] + S[j]) % 256
+			keystream.append(S[t])
+		return keystream
+	\end{python}
+
+	\begin{itemize}
+		\item $i = 1$, $j = 0$
+		\item $K\textsubscript{B} = (6 + V + K\textsubscript{3})$ $mod(256)$
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{RC4 Attack}{Recover $K\textsubscript{3}$ Cont'd}
+
+	\begin{itemize}
+		\item $K\textsubscript{B} = (6 + V + K\textsubscript{3})$ $mod(256)$
+		\item Suppose, Trudy can guess or knows the first byte of the plaintext, she can determine $K\textsubscript{3}$ with:
+		\item $\rightarrow$ $K\textsubscript{3}  = K\textsubscript{B} - 6 - V$ $mod(256)$
+		\item For that, $S\textsubscript{0}, S\textsubscript{1}$ and $S\textsubscript{3}$ have to remain the same
+		\item Probability of that: $(\frac{253}{256})\textsuperscript{252} ~ 0.0513$
+		\item $\rightarrow$ Approximately $5\%$
+		\item What is a sufficient number of IVs in order to recover $K\textsubscript{3}$?
+	\end{itemize}
+
 \end{frame}
 
 \begin{frame}[fragile]{WEP}{Short summary}
@@ -349,14 +489,16 @@
 	\frametitle{Recovery of unknwon bytes} 
 	\begin{theorem}
 		Let $ K\textsubscript{n} $ be the RC4 key value at position $ n $. Let $ IV\textsubscript{n} $ be a tuple of $ (n, N-1, V) $,
-		where $ N = 256 $ and  $ V \in {{0,\dots,255}}, n \geq 3 $ and $ k\textsubscript{n} $ the known keystreambyte at position $n$.
-		Then $ K\textsubscript{n} = k\textsubscript{n} - \sum_{1}^{n}x - V - (\sum_{3}^{n}K\textsubscript{n}) $ 
+		where $ N = 256, V \in {{0,\dots,255}}, n \geq 3 $ and $ k\textsubscript{n} $ the known keystreambyte at position $n$.
+		Then $ K\textsubscript{n} = k\textsubscript{n} - \sum_{1}^{n}x - V - (\sum_{3}^{n-1}K\textsubscript{n}) $ 
 	\end{theorem} 
 	\begin{itemize}
 		\item How many IVs are sufficient to determine $ K\textsubscript{n} $?
 		\item Determine probability that $ S\textsubscript{0}, S\textsubscript{1}, S\textsubscript{3} $ remain unchanged
 	\end{itemize}
 \end{frame}
+
+\section{Preventing attacks}
 
 \begin{frame}[fragile]{Prevention against this attack}
 	\begin{itemize}
