@@ -178,28 +178,44 @@ def maintest():
 
 
 def testprobability():
-
-    # Erfolgswahrscheinlichkeit (Trudy findet K3 heraus)
+    #Win percentage
     success_probability = 0.05
-
-    # Gesuchte Erfolgswahrscheinlichkeit (50%)
-    target_probability = 1
-
-    # Anzahl der Versuche (abgefangene IVs)
+    #Win probability
+    target_probability = 0.95
     num_trials = 1
 
-    # Schleife, um die Anzahl der IVs schrittweise zu erhöhen
+    #Go through the IVs
     while True:
         cumulative_probability = 1 - binom.cdf(0, num_trials, success_probability)
         if cumulative_probability >= target_probability:
             break
         num_trials += 1
 
-    print("Die Anzahl der IVs, die Trudy benötigt, um K3 mit einer Wahrscheinlichkeit von 50% zu finden, beträgt:", num_trials)
+    print(f"Number of needed IVs to recover K3 with a probability of {target_probability} is: ", num_trials)
+
+#Probability of recovering K3 after num tries
+def test():
+    success_probability = 0.05
+    num_ivs = 60
+    probability = 1 - binom.cdf(0, num_ivs, success_probability)
+    print(f"Probability of recovering K3 after {num_ivs} tries: ", probability)
+
+def testprobabilityofspecificivs():
+
+    # Anzahl der abgefangenen Pakete
+    n = 5000000
+
+    # Wahrscheinlichkeit, einen IV der Form (3, 255, V) in einem einzelnen Paket zu erhalten
+    p = 1 / (256**2)
+
+    # Berechne die Wahrscheinlichkeit, mindestens 60 IVs zu erhalten
+    probability_at_least_60 = binom.sf(59, n, p)
+
+    print("Die Wahrscheinlichkeit, mindestens 60 IVs zu erhalten, beträgt:", probability_at_least_60)
 
 
 
 
-
-testprobability()
+#test()
+testprobabilityofspecificivs()
 #maintest()

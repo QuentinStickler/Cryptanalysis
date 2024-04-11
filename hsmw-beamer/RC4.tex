@@ -484,11 +484,37 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame} 
+\begin{frame}[fragile]{RC4 Attack}{Probability of recovering $K\textsubscript{3}$}
+	\begin{python}
+		success_probability = 0.05
+		#Win probability
+		target_probability = 0.95
+		num_trials = 1
+
+		#Go through the IVs
+		while True:
+			cumulative_probability = 1 - binom.cdf(0, num_trials, success_probability)
+			if cumulative_probability >= target_probability:
+				break
+			num_trials += 1
+		return num_trials
+	\end{python}
+\end{frame}
+
+\begin{frame}[fragile]{RC4 Attack}{Probability of recovering $K\textsubscript{3}$}
 	\begin{itemize}
-		\item Probability of recovering $K\textsubscript{3}$ at least once: $0.05$
-		\item 50\% = 14, 95\% = 60 IVs
-		\item $\mathcal{P} = \sum_{k-1}^{60}$
+		\item How many IVs needed for 
+		\item $50\% \rightarrow$ $14$
+		\item $95\% \rightarrow$ $60$
+		\item Hence, $60$ often regarded as sufficient for determing $K\textsubscript{3}$ (Question 7)
+		\item Hier nochmal gucken, was die Wahrscheinlichkeit ist, solche IVs zu bekommen 
+		\item Ich braeuchte laut meinem Code 5 Millionen lol
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{RC4 Attack}{Other useful IVs}
+	\begin{itemize}
+		\item To increase our chances, we can use IVs of other forms as well
 	\end{itemize}
 \end{frame}
 
