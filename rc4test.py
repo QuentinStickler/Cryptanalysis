@@ -1,3 +1,5 @@
+from scipy.stats import binom
+
 ___doc___ = '''
 
 File for testing the RC4 algorithm and also trying to crack it
@@ -92,8 +94,6 @@ def main():
 
 
 #main()
-for c in "TestText":
-    print(ord(c))
 
 
 ####################TEST-AREA##############################
@@ -176,4 +176,30 @@ def maintest():
     asciiplaintext, keystream = testinitialize(plaintext, key)
     testencrypt(asciiplaintext, keystream)
 
+
+def testprobability():
+
+    # Erfolgswahrscheinlichkeit (Trudy findet K3 heraus)
+    success_probability = 0.05
+
+    # Gesuchte Erfolgswahrscheinlichkeit (50%)
+    target_probability = 1
+
+    # Anzahl der Versuche (abgefangene IVs)
+    num_trials = 1
+
+    # Schleife, um die Anzahl der IVs schrittweise zu erhöhen
+    while True:
+        cumulative_probability = 1 - binom.cdf(0, num_trials, success_probability)
+        if cumulative_probability >= target_probability:
+            break
+        num_trials += 1
+
+    print("Die Anzahl der IVs, die Trudy benötigt, um K3 mit einer Wahrscheinlichkeit von 50% zu finden, beträgt:", num_trials)
+
+
+
+
+
+testprobability()
 #maintest()

@@ -111,7 +111,7 @@
 	\begin{itemize}
 		\item S-Box with length 256
 		\item Counters i and j set to 0
-		\item Linear filling of the S-Box from 0 to 255 (S[0] = 0, S[1] = 1\dots)
+		\item Linear filling of the S-Box from 0 to 255 ($S[0] = 0$, $S[1] = 1$\dots)
 		\item Following loop will be run:
 
 		\begin{python}
@@ -128,7 +128,7 @@
 	\begin{itemize}
 		\item Text = "TestText"
 		\item Key = "TestKey"
-		\item S-Box = [0, 1, 2, 3 \dots, 255]
+		\item S-Box = $[0, 1, 2, 3 \dots, 255]$
 		\item Initialization of T-Box:
 		\begin{itemize}
 			\item Keylength = 7
@@ -465,23 +465,6 @@
 		\item $K\textsubscript{B} = (6 + V + K\textsubscript{3})$ $mod(256)$
 		\item Suppose, Trudy can guess or knows the first byte of the plaintext, she can determine $K\textsubscript{3}$ with:
 		\item $\rightarrow$ $K\textsubscript{3}  = K\textsubscript{B} - 6 - V$ $mod(256)$
-		\item For that, $S\textsubscript{0}, S\textsubscript{1}$ and $S\textsubscript{3}$ have to remain the same
-		\item Probability of that: $(\frac{253}{256})\textsuperscript{252} ~ 0.0513$
-		\item $\rightarrow$ Approximately $5\%$
-		\item What is a sufficient number of IVs in order to recover $K\textsubscript{3}$?
-	\end{itemize}
-
-\end{frame}
-
-\begin{frame}[fragile]{WEP}{Short summary}
-	\begin{itemize}
-		\item Lorem ipsum
-	\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{Attacking RC4 in WEP}
-	\begin{itemize}
-		\item Lorem ipsum
 	\end{itemize}
 \end{frame}
 
@@ -495,6 +478,29 @@
 	\begin{itemize}
 		\item How many IVs are sufficient to determine $ K\textsubscript{n} $?
 		\item Determine probability that $ S\textsubscript{0}, S\textsubscript{1}, S\textsubscript{3} $ remain unchanged
+		\item Probability of that: $(\frac{253}{256})\textsuperscript{252} = 0.0513$
+		\item $\rightarrow$ Approximately $5\%$
+		\item What is a sufficient number of IVs in order to recover $K\textsubscript{3}$?
+	\end{itemize}
+\end{frame}
+
+\begin{frame} 
+	\begin{itemize}
+		\item Probability of recovering $K\textsubscript{3}$ at least once: $0.05$
+		\item 50\% = 14, 95\% = 60 IVs
+		\item $\mathcal{P} = \sum_{k-1}^{60}$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{WEP}{Short summary}
+	\begin{itemize}
+		\item Lorem ipsum
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Attacking RC4 in WEP}
+	\begin{itemize}
+		\item Lorem ipsum
 	\end{itemize}
 \end{frame}
 
