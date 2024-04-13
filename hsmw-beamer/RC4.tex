@@ -29,7 +29,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 2) Specify default fields for presentation and pdf document properties
 % Set the title: \title{Long title everywhere} or \title[Short title for footline]{Long title for titlepage}
-\title[RC4-Algorithmus]{RC4 Algorithm}
+\title[RC4-Algorithm]{RC4-Algorithm}
 % Authors (separate multiple author names e.g. with \and for additional space): \author{author for everywhere} or \author[author for footline]{author for titlepage and thankyouslide}
 \author[Quentin Stickler]{Quentin Stickler, B.Sc.}
 % Institute (will be prefilled automatically, depending on chosen faculty theme option): \institute{institute for everywhere} or \institute[institute for footline and thankyouslide]{institute for titlepage}
@@ -83,15 +83,16 @@
 \begin{document}
 \section{General info}
 
-\begin{frame}[fragile]{The Rise and Fall of RC4}{Why it's not really used anymore}
+\begin{frame}[fragile]{General info}{History}
 	\begin{itemize}
 		\item Stream cipher with variable key-size length
-		\item Used to be most wiedely used stream cipher in Software applications
+		\item Used to be the most widely used stream cipher in Software applications
 		\item Invented in 1987 by Ron Rivest for RSA security
 		\item Kept secret but got leaked in 1994
-		\item Easy to implement and quite fast
+		\item Easy to implement and quite fast (Encryption up to 10x faster than DES)
 		\item ...but also very vulnerable
-		
+		\item Better alternatives have been Invented
+		\item Now only used in private projects due to its simplicity and performance
 	\end{itemize}
 \end{frame}
 
@@ -102,22 +103,23 @@
 		\item Consists of two parts
 		\item Part 1: Initialization
 		\item Part 2: Keystream Generator
-		\item S-Box (Array) with length of 256
-		\item Two 8-byte sized counters i and j
+		\item Used in the algorithm:
+		\item S-Box (Array) with length of $256$
+		\item K-Box with repeating key entries
+		\item Two 8-byte sized counters $i$ and $j$
 	\end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{RC4 Initialization}{Part One: Filling S-Box and T-Box}
 	\begin{itemize}
-		\item S-Box with length 256
-		\item Counters i and j set to 0
-		\item Linear filling of the S-Box from 0 to 255 ($S[0] = 0$, $S[1] = 1$\dots)
+		\item Counters $i$ and $j$ set to $0$
+		\item Linear filling of the S-Box from $0$ to $255$ ($S[0] = 0$, $S[1] = 1$\dots)
 		\item Following loop will be run:
 
 		\begin{python}
-			for x in range(256):		###Initilaze S-Box and T-Box
+			for x in range(256):		###Initialize S-Box and K-Box
 			S[x] = x
-			T[x] = asciikey[x % keylength]
+			K[x] = asciikey[x % keylength]
 		\end{python}
 		
 	\end{itemize}
@@ -148,7 +150,7 @@
 \begin{frame}[fragile]{RC4 Initialization}{Part Two: Permutation}
 	\begin{itemize}
 		\item Permutate S-Box based on given key
-		\item We always use modulo n = 256 because of the given length
+		\item We always use modulo $n = 256$ because of the given length
 
 		\begin{python}
 			j = 0
@@ -173,11 +175,11 @@
 		\dots & \dots & \dots & \dots & \dots & \dots & \dots \\
 		249 & 250 & 251 & 252 & 253 & 254 & 255 \\
 		\end{array}$
-		\item i = \textcolor{green}{0}
-		\item j = (\textcolor{blue} {j} + \textcolor{green}{S[i]} + \textcolor{red}{T[i]}) mod(256)
-		\item j = (\textcolor{blue} {84} + \textcolor{green} {0} + \textcolor{red} {84}) mod(256) = 168 mod (256) = 168
-		\item Swap S[i] (0) and S[j] (84)
-		\item S[i] = 84, S[j] = 0
+		\item $i = \textcolor{green}{0}$
+		\item $j = (\textcolor{blue} {j} + \textcolor{green}{S[i]} + \textcolor{red}{T[i]})$ $mod(256)$
+		\item $j = (\textcolor{blue} {84} + \textcolor{green} {0} + \textcolor{red} {84})$ $mod(256) = 168$ $mod (256) = 168$
+		\item Swap $S[i] (0)$ and $S[j] (84)$
+		\item $S[i] = 84$, $S[j] = 0$
 	\end{itemize}
 \end{frame}
 
@@ -190,11 +192,11 @@
 		249 & 250 & 251 & 252 & 253 & 254 & 255 \\
 	\end{array}$
 	\begin{itemize}
-		\item i = \textcolor{green}{1}
-		\item j = (\textcolor{blue} {j} + \textcolor{green}{S[i]} + \textcolor{red}{T[i]}) mod(256)
-		\item j = (\textcolor{blue} {186} + \textcolor{green} {1} + \textcolor{red} {101}) mod(256) = 288 mod (256) = 32
-		\item Swap S[i] (1) and S[j] (186)
-		\item S[i] = 186, S[j] = 1
+		\item $i = \textcolor{green}{1}$
+		\item $j = (\textcolor{blue} {j} + \textcolor{green}{S[i]} + \textcolor{red}{T[i]})$ $mod(256)$
+		\item $j = (\textcolor{blue} {186} + \textcolor{green} {1} + \textcolor{red} {101})$ $mod(256) = 288$ $mod (256) = 32$
+		\item Swap $S[i] (1)$ and $S[j] (186)$
+		\item $S[i] = 186$, $S[j] = 1$
 	\end{itemize}
 \end{frame}
 
@@ -240,7 +242,7 @@
 	\normalsize
 	\begin{itemize}
 		\item Result = Permutated S-Box
-		\item All numbers from 0-255 in "random" places
+		\item All numbers from $0-255$ in "random" places
 	\end{itemize}
 \end{frame}
 
@@ -327,6 +329,27 @@
 
 \section{Attacking RC4}
 
+\begin{frame}[fragile]{WEP}{Short summary}
+	\begin{itemize}
+		\item Wired Equivalent Protocol
+		\item Used in IEEE 802.11 for protecting LAN users against casual eavesdropping
+		\item Encrypt wirelessly transmitted packets
+		\item Key used for encryption consists of a long-term key (root key) and an initialization vector
+		\item $RC4Key = IV||rk$
+		\item Different public IV per packet, 24-bit-sized; $IV=(X,Y,Z)$
+		\item 40-bit-sized secret $rk$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Attacking RC4 in WEP}
+	\begin{itemize}
+		\item WEP very insecure because of many reasons
+		\item Small key sizes (40-bit $rk$ and 24-bit $IV$) \cite{stovsic2012rc4}
+		\item IV is sent clearly together with packets
+		\item Make use of 'weak IVs' to recover first byte of every message
+	\end{itemize}
+\end{frame}
+
 \begin{frame}[fragile]{Attacks on RC4}{General process}
 	\begin{itemize}
 		\item Cryptanalysis Trudy graps a lot of transfered data
@@ -348,7 +371,6 @@
 		\medskip
 		\begin{table}[h!]
 			\begin{center}
-			  \label{tab:table1}
 			  \begin{tabular}{l|c|c|c|c|c|c|r}
 				$i$ & 0 & 1 & 2 & 3 & 4 & 5 & \dots\\
 				\hline
@@ -368,8 +390,7 @@
 		\medskip
 		\begin{table}[h!]
 			\begin{center}
-			  \label{tab:table2}
-			  \begin{tabular}{l|c|c|c|c|c|c|r}
+			  \begin{tabular}{l|c|c|c|c|c|c|c}
 				$i$ & 0 & 1 & 2 & 3 & 4 & 5 & \dots\\
 				\hline
 				$S\textsubscript{i}$ & \textcolor{green}{3} & 1 & 2 & \textcolor{green}{0} & 4 & 5 & \dots\\
@@ -385,7 +406,6 @@
 
 	\begin{table}[h!]
 		\begin{center}
-			\label{tab:table3}
 			\begin{tabular}{l|c|c|c|c|c|c|r}
 			$i$ & 0 & 1 & 2 & 3 & 4 & 5 & \dots\\
 			\hline
@@ -401,7 +421,6 @@
 
 	\begin{table}[h!]
 		\begin{center}
-			\label{tab:table4}
 			\begin{tabular}{l|c|c|c|c|c|c|c|c|r}
 			$i$ & 0 & 1 & 2 & 3 & 4 & 5 & \dots & 5 + V & \dots\\
 			\hline
@@ -422,7 +441,6 @@
 	
 	\begin{table}[h!]
 		\begin{center}
-			\label{tab:table5}
 			\begin{tabular}{l|c|c|c|c|c|c|c|c|c|c|r}
 			$i$ & 0 & 1 & 2 & 3 & 4 & 5 & \dots & 5 + V & \dots & 6 + V + K\textsubscript{3} & \dots\\
 			\hline
@@ -435,6 +453,55 @@
 		\item Suppose$ S\textsubscript{0}, S\textsubscript{1} and S\textsubscript{3}$ will remain unchanged until step $i = 255$
 		\item Then, the first keystreambyte will be computed following the keystream generator algorithm
 	\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{Attacks on RC4}{Example for K\textsubscript{4} and K\textsubscript{5}: Last step}
+	\begin{itemize}
+		\item $IV = (4,255,V)$ for $K\textsubscript{4}$ after $i=4$ steps:
+	\end{itemize}
+
+	\small
+	
+	\begin{table}[h!]
+		\begin{center}
+			\begin{tabular}{l|c|c|c|c|c|c|c|c|c}
+			$i$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 + V & 9 + V + K3 & 10 + V + K3 + K4\\
+			\hline
+			$S\textsubscript{i}$ & 4 & 0 & 6 + V & 9 + V + K3 & 10 + V + K3 + K4 & 5 & 2 & 3 & 1\\
+			\end{tabular}
+		\end{center}
+	\end{table}
+
+	\normalsize
+
+	\begin{itemize}
+		\item $IV = (5,255,V)$ for $K\textsubscript{5}$ after $i=5$ steps:
+	\end{itemize}
+
+	\small
+
+	\begin{table}[h!]
+		\begin{center}
+			\begin{tabular}{l|c|c|c|c|c}
+			$i$ & 0 & 1 & 2 & 3 & 4\\
+			\hline
+			$S\textsubscript{i}$ & 5 & 0 & 7 + V & 10 + V + K3 + & 14 + V + K3 + K4\\
+			\end{tabular}
+		\end{center}
+	\end{table}
+
+	\begin{table}[h!]
+		\begin{center}
+			\begin{tabular}{l|c|c|c|c}
+			5 & 7 + V & 10 + V + K3 & 14 + V + K3 + K4 & 15 + V + K3 + K4 + K5\\
+			\hline
+			15 + V + K3 + K4 + K5 & 2 & 3 & 4 & 5\\
+			\end{tabular}
+		\end{center}
+	\end{table}
+
+	\normalsize
 
 \end{frame}
 
@@ -512,27 +579,63 @@
 	\end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]{RC4 Attack}{Probability of recovering $K\textsubscript{n}$}
+	\begin{itemize}
+		\item Same probability for recovering $K\textsubscript{4}$, $K\textsubscript{5}$,\dots
+		\item If correct $IV$ is found
+		\small
+		\begin{tabular}{l|c|c|c|c|c|c|c|c|c}
+		$i$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 + V & 9 + V + K3 & 10 + V + K3 + K4\\
+		\hline
+		$S\textsubscript{i}$ & 4 & 0 & 6 + V & 9 + V + K3 & 10 + V + K3 + K4 & 5 & 2 & 3 & 1\\
+		\end{tabular}
+		\normalsize
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{RC4 Attack}{Probability of recovering $K\textsubscript{n}$}
+	\small
+	\begin{python}
+		for x in range(plaintextlength):
+			i = (i + 1) % 256
+			j = (j + S[i]) % 256
+			currentValue = S[i]
+			S[i] = S[j]
+			S[j] = currentValue
+			t = (S[i] + S[j]) % 256
+			keystream.append(S[t])
+		return keystream
+	\end{python}
+	\normalsize
+
+	\begin{itemize}
+		\item $kB = S[t] = S[4] = 10 + V + K\textsubscript{3} + K\textsubscript{4}$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{RC4 Attack}{Probability of recovering $K\textsubscript{n}$}
+	\begin{itemize}
+		\item $\rightarrow$ Same probability for recovering $K\textsubscript{n}$
+		\item Also doable with IVs of other form
+		\item Suppose, $IV = (2,253,1)$ for recovering $K\textsubscript{3}$
+		\item Then, after $i=3$ steps, the $S-box$ will have the following form:
+	\end{itemize}
+\end{frame}
+
 \begin{frame}[fragile]{RC4 Attack}{Other useful IVs}
 	\begin{itemize}
 		\item To increase our chances, we can use IVs of other forms as well
-	\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{WEP}{Short summary}
-	\begin{itemize}
-		\item Lorem ipsum
-	\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{Attacking RC4 in WEP}
-	\begin{itemize}
-		\item Lorem ipsum
+		\item Hier nochmal gucken, wie viele allgemein gut sind, da gabs ne gute Quelle irgendwo!!!!
+		\item Examples for recovering $K\textsubscript{3}$: $(1,252,1)$, $(2,253,0)$ (Question 10)
+		\item Examples for recovering $K\textsubscript{4}$: $(1, 254, 0)$, $(1, 254, 0)$
+		\item Examples for recovering $K\textsubscript{5}$: $(1,252,1)$, $(2,253,0)$
+		\item Examples for recovering $K\textsubscript{n}$: $(1,252,1)$, $(2,253,0)$
 	\end{itemize}
 \end{frame}
 
 \section{Preventing attacks}
 
-\begin{frame}[fragile]{Prevention against this attack}
+\begin{frame}[fragile]{Prevention against FMS attack}
 	\begin{itemize}
 		\item Lorem ipsum
 	\end{itemize}
@@ -540,7 +643,8 @@
 
 \appendix
 \makethankyou
-%	\makebibliography
+%\makebibliography
+\bibliography{sources.bib}
 
 \section{\appendixname}
 
