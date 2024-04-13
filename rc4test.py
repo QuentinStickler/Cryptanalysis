@@ -214,20 +214,29 @@ def testprobabilityofspecificivs():
     print("Die Wahrscheinlichkeit, mindestens 60 IVs zu erhalten, beträgt:", probability_at_least_60)
 
 
-def recoverkeystreambyte(ivb1, ivb2, ivb3, wantedbyte):
+def recoverkeystreambyte(ivb1, ivb2, ivb3, ivb4, wantedbyte):
     sbox = [0] * 256
     for i in range(255):
         sbox[i] = i
-    key = (ivb1,ivb2,ivb3)
+    key = [ivb1,ivb2,ivb3,ivb4]
     i = 0
     j = 0
-    for x in range(wantedbyte+1):
-        j = j + sbox[x] + key.index(i)
+    for x in range(wantedbyte):
+        j = (j + sbox[i] + key[i]) % 256
         s_j = sbox[j]
         sbox[j] = sbox[i]
         sbox[i] = s_j
+        # print(f"i: {i}")
+        # print(f"j: {j}")
+        # for x in range(wantedbyte):
+        #     print(sbox[x])
+        # print("-------------")
         i += 1
-    for x in range(255):
-        print(sbox[x])
 
-recoverkeystreambyte(1,252,1,3)
+    t = sbox[1] + sbox[sbox[1]]
+    if(t == wantedbyte):
+        print("IV works.")
+    else: print("IV doesn't work.")
+
+
+recoverkeystreambyte(4,255,123,69, 4)

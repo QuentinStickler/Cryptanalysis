@@ -35,7 +35,7 @@
 % Institute (will be prefilled automatically, depending on chosen faculty theme option): \institute{institute for everywhere} or \institute[institute for footline and thankyouslide]{institute for titlepage}
 %\institute[institute for footline and thankyouslide]{institute for titlepage}
 % Date of presentation (\today or a fixed value): \date{date for everywhere} or \date[date for footline]{date for titlepage}
-\date{\today} % 22. März 2022
+\date{24. Juli 2024} % 22. März 2022
 % Impressum for thankyou slide (leave one empty if not wanted or needed):
 \email{qstickle@hs-mittweida.de} % \email{E-Mail}
 %\phone{+49 3727 58-1598} % \phone[Mobile Number]{Telephone Number}
@@ -78,6 +78,8 @@
 \usepackage{pythonhighlight}
 \usepackage{amsmath}
 \usepackage{setspace}
+
+\newtheorem{thm}{Theorem}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
@@ -537,11 +539,11 @@
 
 \begin{frame} 
 	\frametitle{Recovery of unknwon bytes} 
-	\begin{theorem}
+	\begin{thm}
 		Let $ K\textsubscript{n} $ be the RC4 key value at position $ n $. Let $ IV\textsubscript{n} $ be a tuple of $ (n, N-1, V) $,
 		where $ N = 256, V \in {{0,\dots,255}}, n \geq 3 $ and $ k\textsubscript{n} $ the known keystreambyte at position $n$.
-		Then $ K\textsubscript{n} = k\textsubscript{n} - \sum_{1}^{n}x - V - (\sum_{3}^{n-1}K\textsubscript{n}) $ 
-	\end{theorem} 
+		Then $ K\textsubscript{n} = k\textsubscript{n} - \sum_{1}^{n}x - V - (\sum_{3}^{n-1}K\textsubscript{n}) $ (Question 8)
+	\end{thm} 
 	\begin{itemize}
 		\item How many IVs are sufficient to determine $ K\textsubscript{n} $?
 		\item Determine probability that $ S\textsubscript{0}, S\textsubscript{1}, S\textsubscript{3} $ remain unchanged
@@ -583,6 +585,7 @@
 	\begin{itemize}
 		\item Same probability for recovering $K\textsubscript{4}$, $K\textsubscript{5}$,\dots
 		\item If correct $IV$ is found
+		\bigskip
 		\small
 		\begin{tabular}{l|c|c|c|c|c|c|c|c|c}
 		$i$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 + V & 9 + V + K3 & 10 + V + K3 + K4\\
@@ -620,16 +623,24 @@
 		\item Suppose, $IV = (2,253,1)$ for recovering $K\textsubscript{3}$
 		\item Then, after $i=3$ steps, the $S-box$ will have the following form:
 	\end{itemize}
+
+	\begin{tabular}{l|c|c|c|c|c|c|r}
+		$i$ & 0 & 1 & 2 & 3 & \dots & 3 + $K\textsubscript{3}$ & \dots \\
+		\hline
+		$S\textsubscript{i}$ & 0 & 2 & 1 & 3 +$K\textsubscript{3}$ & \dots & 3 & \dots\\
+	\end{tabular}
 \end{frame}
 
-\begin{frame}[fragile]{RC4 Attack}{Other useful IVs}
+\begin{frame}[fragile]{RC4 Attack}{Determin useful IVs}
+	\begin{thm}
+		Let $kN$ be the keystreambyte at position $n$ we are looking for. We denote $IV \dagger kN$, if the given $IV$ is useful for the attacker to recover $kN$.
+		To check if a given $IV=(x,y,z)$ is useful for the attack, we calculate the $s-box$ until step $i=n$. 
+		$S[i] + S[S[i]] \stackrel{?}{=} n \rightarrow IV \dagger kN$.
+	\end{thm} 
 	\begin{itemize}
 		\item To increase our chances, we can use IVs of other forms as well
 		\item Hier nochmal gucken, wie viele allgemein gut sind, da gabs ne gute Quelle irgendwo!!!!
-		\item Examples for recovering $K\textsubscript{3}$: $(1,252,1)$, $(2,253,0)$ (Question 10)
-		\item Examples for recovering $K\textsubscript{4}$: $(1, 254, 0)$, $(1, 254, 0)$
-		\item Examples for recovering $K\textsubscript{5}$: $(1,252,1)$, $(2,253,0)$
-		\item Examples for recovering $K\textsubscript{n}$: $(1,252,1)$, $(2,253,0)$
+		\item Examples for recovering $K\textsubscript{3}$: $(2,253,0)$ (Question 10)
 	\end{itemize}
 \end{frame}
 
@@ -642,7 +653,7 @@
 \end{frame}
 
 \appendix
-\makethankyou
+%\makethankyou
 %\makebibliography
 \bibliography{sources.bib}
 
