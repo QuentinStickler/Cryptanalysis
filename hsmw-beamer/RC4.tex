@@ -78,6 +78,35 @@
 \usepackage{pythonhighlight}
 \usepackage{amsmath}
 \usepackage{setspace}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolor}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{Pythonstyle}{
+	language=Python,
+	backgroundcolor=\color{backcolor},
+	commentstyle=\color{codegreen}
+	keywordstyle=\color{red},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,
+	breaklines=true,
+	captionpos=b,
+	keepspaces=true,
+	numbers=left,
+	numbersep=5pt,
+	showspaces=false,
+	showstringspaces=false,
+	showtabs=false,
+	showtabs=false,
+	tabsize=2
+}
+%\lstset{style=Pythonstyle}
 
 \newtheorem{thm}{Theorem}
 
@@ -88,12 +117,12 @@
 \begin{frame}[fragile]{General info}{History}
 	\begin{itemize}
 		\item Stream cipher with variable key-size length
-		\item Used to be the most widely used stream cipher in Software applications
-		\item Invented in 1987 by Ron Rivest for RSA security
+		\item Used to be the most widely used stream cipher in software applications
+		\item Invented in 1987 by Ron Rivest
 		\item Kept secret but got leaked in 1994
 		\item Easy to implement and quite fast (Encryption up to 10x faster than DES)
 		\item ...but also very vulnerable
-		\item Better alternatives have been Invented
+		\item Better alternatives have been invented
 		\item Now only used in private projects due to its simplicity and performance
 	\end{itemize}
 \end{frame}
@@ -103,8 +132,8 @@
 \begin{frame}[fragile]{RC4 Algorithm}{How does it work?}
 	\begin{itemize}
 		\item Consists of two parts
-		\item Part 1: Initialization
-		\item Part 2: Keystream Generator
+		\item Part 1: Key Scheduling Algorithm \textbf{(KSA)}
+		\item Part 2: Pseudo Random Number Generator Algorithm \textbf{(PRGA)}
 		\item Used in the algorithm:
 		\item S-Box (Array) with length of $256$
 		\item K-Box with repeating key entries
@@ -117,14 +146,13 @@
 		\item Counters $i$ and $j$ set to $0$
 		\item Linear filling of the S-Box from $0$ to $255$ ($S[0] = 0$, $S[1] = 1$\dots)
 		\item Following loop will be run:
-
-		\begin{python}
-			for x in range(256):		###Initialize S-Box and K-Box
+		\item State space thus: $(2^{8})^2 * 256! \approx 2^{1700}$ (Question 6)
+	\end{itemize}
+	\begin{lstlisting}[language=Python]
+		for x in range(256):		
 			S[x] = x
 			K[x] = asciikey[x % keylength]
-		\end{python}
-		
-	\end{itemize}
+	\end{lstlisting}
 \end{frame}
 
 
@@ -153,15 +181,14 @@
 	\begin{itemize}
 		\item Permutate S-Box based on given key
 		\item We always use modulo $n = 256$ because of the given length
-
-		\begin{python}
+		\begin{lstlisting}[language=Python]
 			j = 0
 			for i in range(256):
 				j = (j + S[i] + T[i]) % 256
 				currentvalue = S[i]
 				S[i] = S[j]
 				S[j] = currentvalue
-		\end{python}
+		\end{lstlisting}
 		\item At the end: (Pseudo-)randomly generated S-Box
 		
 	\end{itemize}
@@ -251,7 +278,7 @@
 \begin{frame}[fragile]{Keystream Generator}
 	\begin{itemize}
 		\item Generate keystream depending on length of given plaintext
-		\begin{python}
+		\begin{lstlisting}[language=Python]
    			for x in range(plaintextlength):
 				i = (i + 1) % 256
 				j = (j + S[i]) % 256
@@ -261,7 +288,7 @@
 				t = (S[i] + S[j]) % 256
 				keystream.append(S[t])
     		return keystream
-		\end{python}
+		\end{lstlisting}
 	\end{itemize}
 \end{frame}
 
@@ -343,9 +370,16 @@
 	\end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]{Security problems in WEP}
+	\begin{itemize}
+		\item CRC
+		\item RC4 IV 
+		\item IP stuff
+	\end{itemize}
+\end{frame}
+
 \begin{frame}[fragile]{Attacking RC4 in WEP}
 	\begin{itemize}
-		\item WEP very insecure because of many reasons
 		\item Small key sizes (40-bit $rk$ and 24-bit $IV$) \cite{stovsic2012rc4}
 		\item IV is sent clearly together with packets
 		\item Make use of 'weak IVs' to recover first byte of every message
@@ -509,7 +543,7 @@
 
 \begin{frame}[fragile]{RC4 Attack}{Recover $K\textsubscript{3}$}
 
-	\begin{python}
+	\begin{lstlisting}[language=Python]
 		for x in range(plaintextlength):
 			i = (i + 1) % 256
 			j = (j + S[i]) % 256
@@ -519,7 +553,7 @@
 			t = (S[i] + S[j]) % 256
 			keystream.append(S[t])
 		return keystream
-	\end{python}
+	\end{lstlisting}
 
 	\begin{itemize}
 		\item $i = 1$, $j = 0$
@@ -554,7 +588,7 @@
 \end{frame}
 
 \begin{frame}[fragile]{RC4 Attack}{Probability of recovering $K\textsubscript{3}$}
-	\begin{python}
+	\begin{lstlisting}[language=Python]
 		success_probability = 0.05
 		#Win probability
 		target_probability = 0.95
@@ -567,7 +601,7 @@
 				break
 			num_trials += 1
 		return num_trials
-	\end{python}
+	\end{lstlisting}
 \end{frame}
 
 \begin{frame}[fragile]{RC4 Attack}{Probability of recovering $K\textsubscript{3}$}
@@ -598,7 +632,7 @@
 
 \begin{frame}[fragile]{RC4 Attack}{Probability of recovering $K\textsubscript{n}$}
 	\small
-	\begin{python}
+	\begin{lstlisting}[language=Python]
 		for x in range(plaintextlength):
 			i = (i + 1) % 256
 			j = (j + S[i]) % 256
@@ -608,7 +642,7 @@
 			t = (S[i] + S[j]) % 256
 			keystream.append(S[t])
 		return keystream
-	\end{python}
+	\end{lstlisting}
 	\normalsize
 
 	\begin{itemize}
@@ -646,9 +680,28 @@
 
 \section{Preventing attacks}
 
-\begin{frame}[fragile]{Prevention against FMS attack}
+\begin{frame}[fragile]{Prevention against RC4 attacks}{Many improved algorithms}
 	\begin{itemize}
-		\item Lorem ipsum
+		\item Performance $\leftrightarrow$ Security trade-off
+		\item \textbf{RC4+} offers best security, but 3x execution time
+		\item Uses three layers of scrambling the s-box 
+		\item \textbf{Improved RC4}
+		\item Focus on altering PRGA by adding XOR operations and using two S-boxes and higher speed
+		\item \textbf{Effective RC4}
+		\item Same KSA as Improved KSA 
+		\item IN PRGA, two output bytes are produces and XORed with plaintext bytes
+		\item Faster and more secure
+		\item \textbf{RC4FMS} focuses on decrasing chances of a succesful FMS attack
+		\item Adds more randomness to the first 4 bytes 
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Prevention against RC4 attacks}{Many improved algorithms}
+	\begin{itemize}
+		\item Add 256 more steps to the initialization process
+		\item Generate 256 keystream bytes and discard them after the initialization process
+		\item Then generate the actual keystream
+		\item 
 	\end{itemize}
 \end{frame}
 
