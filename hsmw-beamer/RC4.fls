@@ -1925,13 +1925,13 @@ INPUT C:\Users\Quentin\AppData\Local\Programs\MiKTeX\fonts\tfm\ascender\opensans
 INPUT C:\Users\Quentin\AppData\Local\Programs\MiKTeX\fonts\tfm\ascender\opensans\OpenSans-Italic-T1-TLF.tfm
 INPUT C:\Users\Quentin\AppData\Local\Programs\MiKTeX\fonts\tfm\ascender\opensans\OpenSans-Italic-T1-TLF.tfm
 INPUT C:\Users\Quentin\AppData\Local\Programs\MiKTeX\fonts\tfm\ascender\opensans\OpenSans-Italic-T1-TLF.tfm
+INPUT C:\Users\Quentin\AppData\Local\Programs\MiKTeX\fonts\vf\ascender\opensans\OpenSans-Bold-T1-TLF.vf
+INPUT C:\Users\Quentin\AppData\Local\Programs\MiKTeX\fonts\tfm\ascender\opensans\OpenSans-Bold-T1-TLF--base.tfm
 OUTPUT RC4.vrb
 INPUT .\RC4.vrb
 INPUT RC4.vrb
 INPUT .\RC4.vrb
 INPUT RC4.vrb
-INPUT C:\Users\Quentin\AppData\Local\Programs\MiKTeX\fonts\vf\ascender\opensans\OpenSans-Bold-T1-TLF.vf
-INPUT C:\Users\Quentin\AppData\Local\Programs\MiKTeX\fonts\tfm\ascender\opensans\OpenSans-Bold-T1-TLF--base.tfm
 INPUT C:\Users\Quentin\AppData\Local\Programs\MiKTeX\fonts\vf\ascender\opensans\OpenSans-Italic-T1-TLF.vf
 INPUT C:\Users\Quentin\AppData\Local\Programs\MiKTeX\fonts\tfm\ascender\opensans\OpenSans-Italic-T1-TLF--base.tfm
 OUTPUT RC4.vrb

@@ -35,7 +35,7 @@
 % Institute (will be prefilled automatically, depending on chosen faculty theme option): \institute{institute for everywhere} or \institute[institute for footline and thankyouslide]{institute for titlepage}
 %\institute[institute for footline and thankyouslide]{institute for titlepage}
 % Date of presentation (\today or a fixed value): \date{date for everywhere} or \date[date for footline]{date for titlepage}
-\date{24. Juli 2024} % 22. März 2022
+\date{24. April 2024} % 22. März 2022
 % Impressum for thankyou slide (leave one empty if not wanted or needed):
 \email{qstickle@hs-mittweida.de} % \email{E-Mail}
 %\phone{+49 3727 58-1598} % \phone[Mobile Number]{Telephone Number}
@@ -116,12 +116,12 @@
 
 \begin{frame}[fragile]{General info}{History}
 	\begin{itemize}
-		\item Stream cipher with variable key-size length
+		\item Stream cipher with \textbf{variable} key-size length
 		\item Used to be the most widely used stream cipher in software applications
 		\item Invented in 1987 by Ron Rivest
 		\item Kept secret but got leaked in 1994
-		\item Easy to implement and quite fast (Encryption up to 10x faster than DES)
-		\item ...but also very vulnerable
+		\item \textbf{Easy} to implement and quite \textbf{fast} (Encryption up to 10x faster than DES)
+		\item Offers a \textbf{lot of weaknesses und vulnerabilities}
 		\item Better alternatives have been invented
 		\item Now only used in private projects due to its simplicity and performance
 	\end{itemize}
@@ -141,7 +141,7 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{RC4 Initialization}{Part One: Filling S-Box and T-Box}
+\begin{frame}[fragile]{Initialization}{Part One: Filling S-Box and T-Box}
 	\begin{itemize}
 		\item Counters $i$ and $j$ set to $0$
 		\item Linear filling of the S-Box from $0$ to $255$ ($S[0] = 0$, $S[1] = 1$\dots)
@@ -177,7 +177,7 @@
 \end{frame}
 
 
-\begin{frame}[fragile]{RC4 Initialization}{Part Two: Permutation}
+\begin{frame}[fragile]{Initialization}{Part Two: Permutation}
 	\begin{itemize}
 		\item Permutate S-Box based on given key
 		\item We always use modulo $n = 256$ because of the given length
@@ -203,11 +203,11 @@
 		\dots & \dots & \dots & \dots & \dots & \dots & \dots \\
 		249 & 250 & 251 & 252 & 253 & 254 & 255 \\
 		\end{array}$
-		\item $i = \textcolor{green}{0}$
-		\item $j = (\textcolor{blue} {j} + \textcolor{green}{S[i]} + \textcolor{red}{T[i]})$ $mod(256)$
-		\item $j = (\textcolor{blue} {84} + \textcolor{green} {0} + \textcolor{red} {84})$ $mod(256) = 168$ $mod (256) = 168$
-		\item Swap $S[i] (0)$ and $S[j] (84)$
-		\item $S[i] = 84$, $S[j] = 0$
+		\item i = \textcolor{green}{0}
+		\item j = (\textcolor{blue} {j} + \textcolor{green}{S[i]} + \textcolor{red}{T[i]}) $\%$ (256)
+		\item j = (\textcolor{blue} {84} + \textcolor{green} {0} + \textcolor{red} {84}) $\%$(256) = 168 $\%$ (256) = $168$
+		\item Swap S[i] (0) and S[j] (84)
+		\item S[i] = $84$, S[j] = $0$
 	\end{itemize}
 \end{frame}
 
@@ -220,11 +220,11 @@
 		249 & 250 & 251 & 252 & 253 & 254 & 255 \\
 	\end{array}$
 	\begin{itemize}
-		\item $i = \textcolor{green}{1}$
-		\item $j = (\textcolor{blue} {j} + \textcolor{green}{S[i]} + \textcolor{red}{T[i]})$ $mod(256)$
-		\item $j = (\textcolor{blue} {186} + \textcolor{green} {1} + \textcolor{red} {101})$ $mod(256) = 288$ $mod (256) = 32$
-		\item Swap $S[i] (1)$ and $S[j] (186)$
-		\item $S[i] = 186$, $S[j] = 1$
+		\item i = \textcolor{green}{1}
+		\item j = (\textcolor{blue} {j} + \textcolor{green}{S[i]} + \textcolor{red}{T[i]}) $\%$ (256)
+		\item j = (\textcolor{blue} {186} + \textcolor{green} {1} + \textcolor{red} {101}) $\%$ (256) = 288 $\%$ (256) = $32$
+		\item Swap S[i] (1) and S[j] (186)
+		\item S[i] = $186$, S[j] = $1$
 	\end{itemize}
 \end{frame}
 
@@ -238,10 +238,10 @@
 	\end{array}$
 	\begin{itemize}
 		\item i = \textcolor{green}{2}
-		\item j = (\textcolor{blue} {j} + \textcolor{green}{S[i]}) + \textcolor{red}{T[i]} mod(256)
-		\item j = (\textcolor{blue} {47} + \textcolor{green} {2} + \textcolor{red} {115}) mod(256) = 126 mod (256) = 126
+		\item j = (\textcolor{blue} {j} + \textcolor{green}{S[i]}) + \textcolor{red}{T[i]} $\%$ (256)
+		\item j = (\textcolor{blue} {47} + \textcolor{green} {2} + \textcolor{red} {115}) $\%$ (256) = 126 $\%$ (256) = $126$
 		\item Swap S[i] (1) and S[j] (47)
-		\item S[i] = 47, S[j] = 2
+		\item S[i] = $47$, S[j] = $2$
 	\end{itemize}
 \end{frame}
 
@@ -294,48 +294,46 @@
 
 \begin{frame}[fragile]{Keystream Generator}{Example, i = 0}
 	\begin{itemize}
-		\item i = 0, j = 0
-		\item i = (0 + 1) mod 256 = 1
-		\item j = (0 + 186) mod 256 = 186 mod 256 = 186
+		\item i = $0$, j = $0$
+		\item i = (0 + 1) $\%$ 256 = $1$
+		\item j = (0 + 186) $\%$ 256 = 186 $\%$ 256 = $186$
 		\item Swap S[i] (186) and S[j] (202)
-		\item t = (202 + 186) mod 256 = 388 mod 256 = 132
-		\item keystream = [132, ]
+		\item t = (202 + 186) $\%$ 256 = 388 $\%$ 256 = $132$
+		\item keystream = [$132$, ]
 	\end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Keystream Generator}{Example, i = 1}
 	\begin{itemize}
-		\item i = 1, j = 186
-		\item i = (1 + 1) mod 256 = 2
-		\item j = (186 + 47) mod 256 = 233 mod 256 = 233
+		\item i = $1$, j = $186$
+		\item i = (1 + 1) $\%$ 256 = $2$
+		\item j = (186 + 47) $\%$ 256 = 233 $\%$ 256 = $233$
 		\item Swap S[i] (47) and S[j] (11)
-		\item t = (47 + 11) mod 256 = 58 mod 256 = 58
-		\item keystream = [132, 58, ]
+		\item t = (47 + 11) $\%$ 256 = 58 $\%$ 256 = $58$
+		\item keystream = [$132$, $58$, ]
 	\end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Keystream Generator}{Example, i = 2}
 	\begin{itemize}
-		\item i = 2, j = 233
-		\item i = (2 + 1) mod 256 = 3
-		\item j = (233 + 208) mod 256 = 451 mod 256 = 185
+		\item i = $2$, j = $233$
+		\item i = (2 + 1) $\%$ 256 = $3$
+		\item j = (233 + 208) $\%$ 256 = 451 $\%$ 256 = $185$
 		\item Swap S[i] (208) and S[j] (90)
-		\item t = (208 + 90) mod 256 = 298 mod 256 = 42
-		\item keystream = [132, 58, 42, ....]
-		\item Final keystream = [132, 58, 42, 7, 129, 233, 245, 149]
+		\item t = (208 + 90) $\%$ 256 = 298 $\%$ 256 = $42$
+		\item keystream = [$132$, $58$, $42$, ....]
+		\item Final keystream = [$132, 58, 42, 7, 129, 233, 245, 149$]
 	\end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Encryption}
 	\small
 	\begin{itemize}
-		\item Plaintext XOR keystream
-		\item Plaintext = "TestText" = [84, 101, 115, 116, 84, 101, 120, 116]
-		\item Binary: 01010100 01100101 01110011 01110100 01010100 01100101 01111000 01110100
-		\item Keystream = [132, 58, 42, 7, 129, 233, 245, 149]
-		\item = 10000100 0111010 00101010 0000111 10000001 11101001 11110101 10010101
-		\item 01010100 01100101 01110011 01110100 01010100 01100101 01111000 01110100 XOR
-		\item 10000100 00111010 00101010 00000111 10000001 11101001 11110101 10010101 = 
+		\item Plaintext $\oplus$ Keystream
+		\item Plaintext = "TestText" = {\color{purple}[84, 101, 115, 116, 84, 101, 120, 116]}
+		\item Keystream = {\color{olive}[132, 58, 42, 7, 129, 233, 245, 149]}
+		\item {\color{purple}01010100 01100101 01110011 01110100 01010100 01100101 01111000 01110100} $\oplus$
+		\item {\color{olive}10000100 00111010 00101010 00000111 10000001 11101001 11110101 10010101} = 
 		\item 11010000 01011111 01011001 01110011 11010101 10001100 10001101 11100001
 	\end{itemize}
 	\normalsize
@@ -344,13 +342,11 @@
 \begin{frame}[fragile]{Decryption}
 	\small
 	\begin{itemize}
-		\item Ciphertext XOR keystream
-		\item Plaintext = "TestText"
-		\item Binary: 01010100 01100101 01110011 01110100 01010100 01100101 01111000 01110100
-		\item Keystream = [132, 58, 42, 7, 129, 233, 245, 149] =
-		\item 10000100 0111010 00101010 0000111 10000001 11101001 11110101 10010101
-		\item 01010100 01100101 01110011 01110100 01010100 01100101 01111000 01110100 XOR
-		\item 10000100 00111010 00101010 00000111 10000001 11101001 11110101 10010101 = 
+		\item Ciphertext $\oplus$ Keystream
+		\item Ciphertext = "" = {\color{purple}[0,0,0,0,0,0]}
+		\item Keystream = {\color{olive}[132, 58, 42, 7, 129, 233, 245, 149]} 
+		\item {\color{purple}01010100 01100101 01110011 01110100 01010100 01100101 01111000 01110100} $\oplus$ 
+		\item {\color{olive}10000100 00111010 00101010 00000111 10000001 11101001 11110101 10010101} = 
 		\item 11010000 01011111 01011001 01110011 11010101 10001100 10001101 11100001
 	\end{itemize}
 	\normalsize
@@ -372,9 +368,14 @@
 
 \begin{frame}[fragile]{Security problems in WEP}
 	\begin{itemize}
-		\item CRC
-		\item RC4 IV 
-		\item IP stuff
+		\item "Swiss Cheese" of protocols $\rightarrow$ lots of security vulnerabilities
+		\item Small key sizes; only 64-bit and 128-bit encryption key sizes
+		\item CRC-32 for detecting changes made to data
+		\begin{itemize}
+		\item Useful for detecting errors but useless for validating cryptographic validation
+		\item Attacker can easily alter the data so that the validation check is getting verified
+		\end{itemize}
+		\item Small IV sizes of 24-bit $\rightarrow 2^{24}$ possibilities ($<17 million$)
 	\end{itemize}
 \end{frame}
 
@@ -382,7 +383,7 @@
 	\begin{itemize}
 		\item Small key sizes (40-bit $rk$ and 24-bit $IV$) \cite{stovsic2012rc4}
 		\item IV is sent clearly together with packets
-		\item Make use of 'weak IVs' to recover first byte of every message
+		\item Make use of "weak IVs" to recover first byte of every message
 	\end{itemize}
 \end{frame}
 
@@ -400,8 +401,8 @@
 
 \begin{frame}[fragile]{Attacks on RC4}{Example for K\textsubscript{3}}
 	\begin{itemize}
-		\item Suppose, Trudy has recoverd $IV = (\textcolor{red}{3}, 255, V)$ 
-		\item Used for recovering Example for $K\textsubscript{\textcolor{red}{3}}$
+		\item Suppose, Trudy has recoverd $IV = (\textcolor{green}{3}, 255, V)$ 
+		\item Used for recovering Example for $K\textsubscript{\textcolor{green}{3}}$
 		\item Let's look at our S-Box during the initialization phase
 		\item First, $S$ is set to the identitity permutation
 		\medskip
@@ -421,7 +422,7 @@
 \begin{frame}[fragile]{Attacks on RC4}{Example for K\textsubscript{3}}
 	\begin{itemize}
 		\item Now, at the first step $i=0$, we compute the next $j$
-		\item $j = j + S\textsubscript{i} + K\textsubscript{1} = 0 + 0 + 3$ $mod(256) = 3$
+		\item $j = j + S\textsubscript{i} + K\textsubscript{1} = 0 + 0 + 3$ $\%(256) = 3$
 		\item Thus, the elements at position $S\textsubscript{i}$ and $S\textsubscript{j}$ are swapped
 		\medskip
 		\begin{table}[h!]
@@ -434,7 +435,7 @@
 			\end{center}
 		  \end{table}
 		\item At the next step $i = 1$, we compute $j$ as
-		\item $j = 3 + S\textsubscript{i} + K\textsubscript{i} = 3 + 1 + 255$ $mod(256) = 3$
+		\item $j = 3 + S\textsubscript{i} + K\textsubscript{i} = 3 + 1 + 255$ $\%(256) = 3$
 	\end{itemize}
 \end{frame}
 
@@ -452,7 +453,7 @@
 
 	\begin{itemize}
 		\item At the next step $i = 2$, we compute $j$ as
-		\item $j = 3 + S\textsubscript{2} + K\textsubscript{2} = 3 + 2 + V$ $mod(256) = 5+V$
+		\item $j = 3 + S\textsubscript{2} + K\textsubscript{2} = 3 + 2 + V$ $\%(256) = 5+V$
 	\end{itemize}
 
 	\begin{table}[h!]
@@ -472,7 +473,7 @@
 	
 	\begin{itemize}
 		\item At the next step $i = 3$, we compute $j$ as
-		\item $j = 5 + V + S\textsubscript{3} + K\textsubscript{3} = 5 + V + 1 + K\textsubscript{3}$ $mod(256) = 6 + V + K\textsubscript{3}$
+		\item $j = 5 + V + S\textsubscript{3} + K\textsubscript{3} = 5 + V + 1 + K\textsubscript{3}$ $\%(256) = 6 + V + K\textsubscript{3}$
 	\end{itemize}
 	
 	\begin{table}[h!]
@@ -504,7 +505,7 @@
 			\begin{tabular}{l|c|c|c|c|c|c|c|c|c}
 			$i$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 + V & 9 + V + K3 & 10 + V + K3 + K4\\
 			\hline
-			$S\textsubscript{i}$ & 4 & 0 & 6 + V & 9 + V + K3 & 10 + V + K3 + K4 & 5 & 2 & 3 & 1\\
+			$S\textsubscript{i}$ & 4 & 0 & 6 + V & 9 + V + K3 & \textcolor{green}{10 + V + K3 + K4} & 5 & 2 & 3 & 1\\
 			\end{tabular}
 		\end{center}
 	\end{table}
@@ -532,7 +533,7 @@
 			\begin{tabular}{l|c|c|c|c}
 			5 & 7 + V & 10 + V + K3 & 14 + V + K3 + K4 & 15 + V + K3 + K4 + K5\\
 			\hline
-			15 + V + K3 + K4 + K5 & 2 & 3 & 4 & 5\\
+			\textcolor{magenta}{15 + V + K3 + K4 + K5} & 2 & 3 & 4 & 5\\
 			\end{tabular}
 		\end{center}
 	\end{table}
@@ -555,8 +556,8 @@
 		return keystream   
 	\end{lstlisting}
 	\begin{itemize}
-		\item $i = 1$, $j = 0$
-		\item $K\textsubscript{B} = (6 + V + K\textsubscript{3})$ $mod(256)$
+		\item i = $1$, j = $0$
+		\item $K\textsubscript{B} = (6 + V + K\textsubscript{3})$ $\%(256)$
 	\end{itemize}
 
 \end{frame}
@@ -564,9 +565,9 @@
 \begin{frame}[fragile]{RC4 Attack}{Recover $K\textsubscript{3}$ Cont'd}
 
 	\begin{itemize}
-		\item $K\textsubscript{B} = (6 + V + K\textsubscript{3})$ $mod(256)$
+		\item $K\textsubscript{B} = (6 + V + K\textsubscript{3})$ $\%(256)$
 		\item Suppose, Trudy can guess or knows the first byte of the plaintext, she can determine $K\textsubscript{3}$ with:
-		\item $\rightarrow$ $K\textsubscript{3}  = K\textsubscript{B} - 6 - V$ $mod(256)$
+		\item $\rightarrow$ $K\textsubscript{3}  = K\textsubscript{B} - 6 - V$ $\%(256)$
 	\end{itemize}
 \end{frame}
 
@@ -580,8 +581,7 @@
 	\begin{itemize}
 		\item How many IVs are sufficient to determine $ K\textsubscript{n} $?
 		\item Determine probability that $ S\textsubscript{0}, S\textsubscript{1}, S\textsubscript{3} $ remain unchanged
-		\item Probability of that: $(\frac{253}{256})\textsuperscript{252} = 0.0513$
-		\item $\rightarrow$ Approximately $5\%$
+		\item Probability of that: $(\frac{253}{256})\textsuperscript{252} = 0.0513 \approx 5\%$
 		\item What is a sufficient number of IVs in order to recover $K\textsubscript{3}$?
 	\end{itemize}
 \end{frame}
@@ -618,6 +618,7 @@
 	\begin{itemize}
 		\item Same probability for recovering $K\textsubscript{4}$, $K\textsubscript{5}$,\dots
 		\item If correct $IV$ is found
+	\end{itemize}
 		\bigskip
 		\small
 		\begin{tabular}{l|c|c|c|c|c|c|c|c|c}
@@ -626,7 +627,6 @@
 		$S\textsubscript{i}$ & 4 & 0 & 6 + V & 9 + V + K3 & 10 + V + K3 + K4 & 5 & 2 & 3 & 1\\
 		\end{tabular}
 		\normalsize
-	\end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{RC4 Attack}{Probability of recovering $K\textsubscript{n}$}
@@ -685,7 +685,7 @@
 		\item \textbf{RC4+} offers best security, but 3x execution time
 		\item Uses three layers of scrambling the s-box 
 		\item \textbf{Improved RC4}
-		\item Focus on altering PRGA by adding XOR operations and using two S-boxes and higher speed
+		\item Focus on altering PRGA by adding $\oplus$ operations and using two S-boxes and higher speed
 		\item \textbf{Effective RC4}
 		\item Same KSA as Improved KSA 
 		\item IN PRGA, two output bytes are produces and XORed with plaintext bytes
@@ -697,9 +697,10 @@
 
 \begin{frame}[fragile]{Prevention against RC4 attacks}{Many improved algorithms}
 	\begin{itemize}
-		\item Add 256 more steps to the initialization process
-		\item Generate 256 keystream bytes and discard them after the initialization process
-		\item Then generate the actual keystream
+		\item Add 256 more steps to the initialization process and discard them afterwards
+		\item Use alternative protocols such as WPA2/WPA3 with other encryption algorithms
+		\item Increase IV sizes to at least $32$ bits $\rightarrow 2^{8}$ times for attacker to find collisions/useful IVs
+		\item Use other hashing algorithms such as MD5, SHA-1
 	\end{itemize}
 \end{frame}
 
