@@ -89,8 +89,8 @@
 \lstdefinestyle{Pythonstyle}{
 	language=Python,
 	backgroundcolor=\color{backcolor},
-	commentstyle=\color{codegreen}
-	keywordstyle=\color{red},
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
 	numberstyle=\tiny\color{codegray},
 	stringstyle=\color{codepurple},
 	basicstyle=\ttfamily\footnotesize,
@@ -106,7 +106,7 @@
 	showtabs=false,
 	tabsize=2
 }
-%\lstset{style=Pythonstyle}
+\lstset{style=Pythonstyle}
 
 \newtheorem{thm}{Theorem}
 
@@ -149,9 +149,9 @@
 		\item State space thus: $(2^{8})^2 * 256! \approx 2^{1700}$ (Question 6)
 	\end{itemize}
 	\begin{lstlisting}[language=Python]
-		for x in range(256):		
-			S[x] = x
-			K[x] = asciikey[x % keylength]
+		for x in range(256):
+			sbox[x] = x
+			kbox[x] = key[x % len(key)]
 	\end{lstlisting}
 \end{frame}
 
@@ -184,10 +184,9 @@
 		\begin{lstlisting}[language=Python]
 			j = 0
 			for i in range(256):
-				j = (j + S[i] + T[i]) % 256
-				currentvalue = S[i]
-				S[i] = S[j]
-				S[j] = currentvalue
+				j = (j + sbox[i] + kbox[i]) % 256
+				Swap(sbox[i], sbox[j])
+			return sbox
 		\end{lstlisting}
 		\item At the end: (Pseudo-)randomly generated S-Box
 		
@@ -279,15 +278,16 @@
 	\begin{itemize}
 		\item Generate keystream depending on length of given plaintext
 		\begin{lstlisting}[language=Python]
-   			for x in range(plaintextlength):
-				i = (i + 1) % 256
-				j = (j + S[i]) % 256
-				currentValue = S[i]
-				S[i] = S[j]
-				S[j] = currentValue
-				t = (S[i] + S[j]) % 256
-				keystream.append(S[t])
-    		return keystream
+			keystream = []
+			i = 0
+			j = 0
+			for x in range(len(text)):
+				i = (1 + i) % 256
+				j = (sbox[i] + j) % 256
+				
+				Swap(sbox[i], sbox[j])
+				keystream.append(sbox[(sbox[i] + sbox[j]) % 256])    
+			return keystream   
 		\end{lstlisting}
 	\end{itemize}
 \end{frame}
@@ -544,17 +544,16 @@
 \begin{frame}[fragile]{RC4 Attack}{Recover $K\textsubscript{3}$}
 
 	\begin{lstlisting}[language=Python]
-		for x in range(plaintextlength):
+		keystream = []
+		i = 0
+		j = 0
+		for x in range(len(text)):
 			i = (i + 1) % 256
-			j = (j + S[i]) % 256
-			currentValue = S[i]
-			S[i] = S[j]
-			S[j] = currentValue
-			t = (S[i] + S[j]) % 256
-			keystream.append(S[t])
-		return keystream
+			j = (sbox[i] + j) % 256
+			Swap(sbox[i], sbox[j])
+			keystream.append(sbox[(sbox[i] + sbox[j]) % 256])    
+		return keystream   
 	\end{lstlisting}
-
 	\begin{itemize}
 		\item $i = 1$, $j = 0$
 		\item $K\textsubscript{B} = (6 + V + K\textsubscript{3})$ $mod(256)$
@@ -665,7 +664,7 @@
 	\end{tabular}
 \end{frame}
 
-\begin{frame}[fragile]{RC4 Attack}{Determin useful IVs}
+\begin{frame}[fragile]{RC4 Attack}{Determine useful IVs}
 	\begin{thm}
 		Let $kN$ be the keystreambyte at position $n$ we are looking for. We denote $IV \dagger kN$, if the given $IV$ is useful for the attacker to recover $kN$.
 		To check if a given $IV=(x,y,z)$ is useful for the attack, we calculate the $s-box$ until step $i=n$. 
@@ -701,12 +700,11 @@
 		\item Add 256 more steps to the initialization process
 		\item Generate 256 keystream bytes and discard them after the initialization process
 		\item Then generate the actual keystream
-		\item 
 	\end{itemize}
 \end{frame}
 
 \appendix
-%\makethankyou
+\makethankyou
 %\makebibliography
 \bibliography{sources.bib}
 
