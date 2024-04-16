@@ -1,0 +1,22 @@
+Why RC4? --> Why the 4
+Rc4-Algorithm (Mit Bindestrich)
+K-box / T-Box --> Auch K-Box maybe rauswerfen Folie 4
+Folie 6 --> Ascii- Text ubsplitten
+Folie 10 --> Da noc den geswapped Wert ins Array eintragen
+Vielleichbt bei den Erklärungen Nochma die streams und Arrays zeigen damits einfacher wird
+Einmal ein Beispiel zu XOR zeigen --> Dann hat mans einmal gesehn
+Decrsyption --> "TestText"
+Zwischen Decryption und WEP muss noch was hin
+Nopchmal FMS in einem SAtz zusammenfassen --> Byteweise herausfinden des keys...?
+Teilweise root key, teilweise long term key --> Folie 21 meinen wir RC4 key und nich root key
+Folie 23 --> Ki nicht k1
+Folie 25 erkklären warum die drei Elemente
+Folie 26 is in wrong space
+Folie 27 --> stimmt das --> Besser visualieren auch für mich
+Folie 29 --> Ist die Wahrscheinlichkeit wirklich gleich?
+Folie 30 kurz erkären
+Folie 33 --> Da muss man noch ne Gleichung unten hin ballern
+NAch FOlie 35 nochmal eine um das Theorem besser zu erklären
+Folie 37 --> Specific to WEP
+Vielleicht von den anderen IVs noch ein Beispiel reinnehmen für mehr Zeit
+An sich probieren das mit iPad zu machen wo ich auch was zeichnen kann

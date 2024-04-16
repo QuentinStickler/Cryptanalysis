@@ -55,7 +55,6 @@ def encrypt(text, key):
     for char in text:
         #Plaintext in Hex for better visualization
         enc = str(hex(char ^ key_stream[i])).upper()
-        print(enc)
         ciphertext += (enc)
         i += 1 
     return ciphertext
