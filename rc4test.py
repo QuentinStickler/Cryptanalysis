@@ -8,8 +8,8 @@ File for testing the RC4 algorithm and also trying to crack it
 #region SecondImplmentation
 def initialize(key):
     #Initialize S-box with values 0-255 and kbox with repeated key values
-    sbox = []
-    kbox = []
+    sbox = [0] * 256
+    kbox = [0] * 256
     for x in range(256):
         sbox[x] = x
         kbox[x] = key[x % len(key)]
@@ -55,9 +55,9 @@ def encrypt(text, key):
     for char in text:
         #Plaintext in Hex for better visualization
         enc = str(hex(char ^ key_stream[i])).upper()
+        print(enc)
         ciphertext += (enc)
-        i += 1
-        
+        i += 1 
     return ciphertext
     
 
@@ -93,8 +93,7 @@ if __name__ == '__main__':
         key = input('Pleas enter your key: ')
         key = [ord(char) for char in key]
         result = decrypt(ciphertext, key)
-        print('Result: ')
-        print(result)
+        print(f'Result: {result}')
     else:
         print('Error in input - try again.')
 #endregion

@@ -80,6 +80,9 @@
 \usepackage{setspace}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage[natbib=true, backend=biber, style=authoryear, useprefix=true]{biblatex}
+\addbibresource{sources.bib}
+\AtBeginBibliography{\small}
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -164,7 +167,7 @@
 		\item Initialization of T-Box:
 		\begin{itemize}
 			\item Keylength = 7
-			\item Ascii-Text = 84 101 115 116 75 101 121
+			\item Ascii-Text = $84 101 115 116 75 101 121$
 		\end{itemize}
 		\medskip
 		$\begin{array}{|ccccccc|}
@@ -194,7 +197,7 @@
 \end{frame}
 
 
-\begin{frame}{Permutation Example}
+\begin{frame}{Permutation Example}{i = 0}
 	\begin{itemize}
 		\item S-Box Initialization:
 		\medskip
@@ -211,7 +214,7 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Permutation Example Cont'd}
+\begin{frame}{Permutation Example Continued}{i = 1}
 	$\begin{array}{|ccccccc|}
 		84 & \textcolor{green}{1} & 2 & 3 & 4 & 5 & 6 \\
 		\dots & \dots & \dots & \dots & \dots & \dots & \dots \\
@@ -228,7 +231,7 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Permutation Example Cont'd}
+\begin{frame}{Permutation Example Continued}{i = 2}
 	$\begin{array}{|ccccccc|}
 		84 & 186 & \textcolor{green}{2} & 3 & 4 & 5 & 6 \\
 		\dots & \dots & \dots & \dots & \dots & \dots & \dots \\
@@ -247,7 +250,7 @@
 
 \begin{frame}{Permutation Example}{Final S-Box Form}
 	\tiny
-	\bigskip
+	\smallskip
 	\centering
 	$\begin{array}{|cccccccccccccccc|}
 		84& 186& 47& 208& 12& 95& 222& 212& 71& 9& 26& 246& 103& 38& 28& 165 \\
@@ -267,6 +270,7 @@
 		240 & 252 & 238 & 188 & 247 & 85 & 203 & 174 & 200 & 11 & 148 & 152 & 160 & 230 & 210 & 29 \\
 		96 & 235 & 163 & 150 & 17 & 204 & 54 & 55 & 198 & 151 & 225 & 21 & 135 & 113 & 19 & 241 \\
 	\end{array}$
+	\medskip
 	\normalsize
 	\begin{itemize}
 		\item Result = Permutated S-Box
@@ -274,7 +278,7 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Keystream Generator}
+\begin{frame}[fragile]{Keystream Generator}{Python Code}
 	\begin{itemize}
 		\item Generate keystream depending on length of given plaintext
 		\begin{lstlisting}[language=Python]
@@ -297,9 +301,10 @@
 		\item i = $0$, j = $0$
 		\item i = (0 + 1) $\%$ 256 = $1$
 		\item j = (0 + 186) $\%$ 256 = 186 $\%$ 256 = $186$
-		\item Swap S[i] (186) and S[j] (202)
+		\item Swap S[i] ($186$) and S[j] ($202$)
 		\item t = (202 + 186) $\%$ 256 = 388 $\%$ 256 = $132$
-		\item keystream = [$132$, ]
+		\item S[t] = $102$
+		\item keystream = [$102$, ]
 	\end{itemize}
 \end{frame}
 
@@ -308,9 +313,10 @@
 		\item i = $1$, j = $186$
 		\item i = (1 + 1) $\%$ 256 = $2$
 		\item j = (186 + 47) $\%$ 256 = 233 $\%$ 256 = $233$
-		\item Swap S[i] (47) and S[j] (11)
+		\item Swap S[i] ($47$) and S[j] ($11$)
 		\item t = (47 + 11) $\%$ 256 = 58 $\%$ 256 = $58$
-		\item keystream = [$132$, $58$, ]
+		\item S[t] = $118$
+		\item keystream = [$102$, $118$, ]
 	\end{itemize}
 \end{frame}
 
@@ -319,35 +325,31 @@
 		\item i = $2$, j = $233$
 		\item i = (2 + 1) $\%$ 256 = $3$
 		\item j = (233 + 208) $\%$ 256 = 451 $\%$ 256 = $185$
-		\item Swap S[i] (208) and S[j] (90)
+		\item Swap S[i] ($208$) and S[j] ($90$)
 		\item t = (208 + 90) $\%$ 256 = 298 $\%$ 256 = $42$
-		\item keystream = [$132$, $58$, $42$, ....]
-		\item Final keystream = [$132, 58, 42, 7, 129, 233, 245, 149$]
+		\item S[t] = $53$
+		\item keystream = [$102$, $118$, $53$, ....]
+		\item Final keystream = [$102$, $118$, $53$, $212$, $66$, $47$, $204$, $221$]
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Encryption}
+\begin{frame}[fragile]{Encryption}{Bytewise XOR}
 	\small
 	\begin{itemize}
-		\item Plaintext $\oplus$ Keystream
 		\item Plaintext = "TestText" = {\color{purple}[84, 101, 115, 116, 84, 101, 120, 116]}
-		\item Keystream = {\color{olive}[132, 58, 42, 7, 129, 233, 245, 149]}
-		\item {\color{purple}01010100 01100101 01110011 01110100 01010100 01100101 01111000 01110100} $\oplus$
-		\item {\color{olive}10000100 00111010 00101010 00000111 10000001 11101001 11110101 10010101} = 
-		\item 11010000 01011111 01011001 01110011 11010101 10001100 10001101 11100001
+		\item Keystream = {\color{olive}[102, 118, 53, 212, 66, 47, 204, 221]}
+		\item Plaintext $\oplus$ Keystream =
+		\item "0X320X130X460XA00X160X4A0XB40XA9" = [$50$, $19$, $70$,$160$, $22$, $74$, $180$, $169$]
 	\end{itemize}
 	\normalsize
 \end{frame}
 
-\begin{frame}[fragile]{Decryption}
+\begin{frame}[fragile]{Decryption}{Bytewise XOR}
 	\small
 	\begin{itemize}
-		\item Ciphertext $\oplus$ Keystream
-		\item Ciphertext = "" = {\color{purple}[0,0,0,0,0,0]}
-		\item Keystream = {\color{olive}[132, 58, 42, 7, 129, 233, 245, 149]} 
-		\item {\color{purple}01010100 01100101 01110011 01110100 01010100 01100101 01111000 01110100} $\oplus$ 
-		\item {\color{olive}10000100 00111010 00101010 00000111 10000001 11101001 11110101 10010101} = 
-		\item 11010000 01011111 01011001 01110011 11010101 10001100 10001101 11100001
+		\item Ciphertext = "0X320X130X460XA00X160X4A0XB40XA9" = {\color{purple}[50, 19, 70, 160, 22, 74, 180, 169]}
+		\item Keystream = {\color{olive}[102, 118, 53, 212, 66, 47, 204, 221]} 
+		\item Ciphertext $\oplus$ Keystream = "Plaintext"
 	\end{itemize}
 	\normalsize
 \end{frame}
@@ -366,7 +368,7 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Security problems in WEP}
+\begin{frame}[fragile]{Security problems in WEP}{Outdated since 2004}
 	\begin{itemize}
 		\item "Swiss Cheese" of protocols $\rightarrow$ lots of security vulnerabilities
 		\item Small key sizes; only 64-bit and 128-bit encryption key sizes
@@ -379,15 +381,16 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Attacking RC4 in WEP}
+\begin{frame}[fragile]{Attacking RC4 in WEP}{Utilizing IVs}
 	\begin{itemize}
 		\item Small key sizes (40-bit $rk$ and 24-bit $IV$) \cite{stovsic2012rc4}
 		\item IV is sent clearly together with packets
 		\item Make use of "weak IVs" to recover first byte of every message
+		\item \textbf{FMS attack}
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Attacks on RC4}{General process}
+\begin{frame}[fragile]{FMS attack on RC4}{General process}
 	\begin{itemize}
 		\item Cryptanalysis Trudy graps a lot of transfered data
 		\item Tries to catch IVs of specific forms 
@@ -422,7 +425,7 @@
 \begin{frame}[fragile]{Attacks on RC4}{Example for K\textsubscript{3}}
 	\begin{itemize}
 		\item Now, at the first step $i=0$, we compute the next $j$
-		\item $j = j + S\textsubscript{i} + K\textsubscript{1} = 0 + 0 + 3$ $\%(256) = 3$
+		\item $j = j + S\textsubscript{i} + K\textsubscript{1} = 0 + 0 + 3$ $\% (256) = 3$
 		\item Thus, the elements at position $S\textsubscript{i}$ and $S\textsubscript{j}$ are swapped
 		\medskip
 		\begin{table}[h!]
@@ -435,7 +438,7 @@
 			\end{center}
 		  \end{table}
 		\item At the next step $i = 1$, we compute $j$ as
-		\item $j = 3 + S\textsubscript{i} + K\textsubscript{i} = 3 + 1 + 255$ $\%(256) = 3$
+		\item $j = 3 + S\textsubscript{i} + K\textsubscript{i} = 3 + 1 + 255$ $\% (256) = 3$
 	\end{itemize}
 \end{frame}
 
@@ -453,7 +456,7 @@
 
 	\begin{itemize}
 		\item At the next step $i = 2$, we compute $j$ as
-		\item $j = 3 + S\textsubscript{2} + K\textsubscript{2} = 3 + 2 + V$ $\%(256) = 5+V$
+		\item $j = 3 + S\textsubscript{2} + K\textsubscript{2} = 3 + 2 + V$ $\% (256) = 5+V$
 	\end{itemize}
 
 	\begin{table}[h!]
@@ -487,7 +490,7 @@
 	\end{table}
 
 	\begin{itemize}
-		\item Suppose$ S\textsubscript{0}, S\textsubscript{1} and S\textsubscript{3}$ will remain unchanged until step $i = 255$
+		\item Suppose$ S\textsubscript{0}, S\textsubscript{1}$ and $S\textsubscript{3}$ will remain unchanged until step $i = 255$
 		\item Then, the first keystreambyte will be computed following the keystream generator algorithm
 	\end{itemize}
 
@@ -530,7 +533,7 @@
 
 	\begin{table}[h!]
 		\begin{center}
-			\begin{tabular}{l|c|c|c|c}
+			\begin{tabular}{c|c|c|c|c}
 			5 & 7 + V & 10 + V + K3 & 14 + V + K3 + K4 & 15 + V + K3 + K4 + K5\\
 			\hline
 			\textcolor{magenta}{15 + V + K3 + K4 + K5} & 2 & 3 & 4 & 5\\
@@ -557,31 +560,32 @@
 	\end{lstlisting}
 	\begin{itemize}
 		\item i = $1$, j = $0$
-		\item $K\textsubscript{B} = (6 + V + K\textsubscript{3})$ $\%(256)$
+		\item $K\textsubscript{B} = (6 + V + K\textsubscript{3})$ $\% (256)$
 	\end{itemize}
 
 \end{frame}
 
-\begin{frame}[fragile]{RC4 Attack}{Recover $K\textsubscript{3}$ Cont'd}
+\begin{frame}[fragile]{RC4 Attack}{Recover $K\textsubscript{3}$ Continued}
 
 	\begin{itemize}
-		\item $K\textsubscript{B} = (6 + V + K\textsubscript{3})$ $\%(256)$
+		\item $K\textsubscript{B} = (6 + V + K\textsubscript{3})$ $\% (256)$
 		\item Suppose, Trudy can guess or knows the first byte of the plaintext, she can determine $K\textsubscript{3}$ with:
-		\item $\rightarrow$ $K\textsubscript{3}  = K\textsubscript{B} - 6 - V$ $\%(256)$
+		\item $\rightarrow$ $K\textsubscript{3}  = K\textsubscript{B} - 6 - V$ $\% (256)$
 	\end{itemize}
 \end{frame}
 
-\begin{frame} 
-	\frametitle{Recovery of unknwon bytes} 
+\begin{frame}[fragile]{Recovery of unknwon bytes}{General approach} 
 	\begin{thm}
 		Let $ K\textsubscript{n} $ be the RC4 key value at position $ n $. Let $ IV\textsubscript{n} $ be a tuple of $ (n, N-1, V) $,
-		where $ N = 256, V \in {{0,\dots,255}}, n \geq 3 $ and $ k\textsubscript{n} $ the known keystreambyte at position $n$.
-		Then $ K\textsubscript{n} = k\textsubscript{n} - \sum_{1}^{n}x - V - (\sum_{3}^{n-1}K\textsubscript{n}) $ (Question 8)
+		where $ N = 256, V \in {{0,\dots,255}}, n \geq 3 $ and $ k\textsubscript{n} $ the known keystreambyte at position $n$. Then (Question 8): \\
+		\begin{center}
+			$K\textsubscript{n} = k\textsubscript{n} - \sum_{1}^{n}x - V - (\sum_{3}^{n-1}K\textsubscript{n})$
+		\end{center}
 	\end{thm} 
 	\begin{itemize}
 		\item How many IVs are sufficient to determine $ K\textsubscript{n} $?
-		\item Determine probability that $ S\textsubscript{0}, S\textsubscript{1}, S\textsubscript{3} $ remain unchanged
-		\item Probability of that: $(\frac{253}{256})\textsuperscript{252} = 0.0513 \approx 5\%$
+		\item Determine probability that $ S\textsubscript{0}$, $S\textsubscript{1}$, $S\textsubscript{n} $ remain unchanged
+		\item Probability of that: $(\frac{253}{256})\textsuperscript{252} = 0.0513 \approx 5\%$ (Question 9)
 		\item What is a sufficient number of IVs in order to recover $K\textsubscript{3}$?
 	\end{itemize}
 \end{frame}
@@ -653,7 +657,7 @@
 	\begin{itemize}
 		\item $\rightarrow$ Same probability for recovering $K\textsubscript{n}$
 		\item Also doable with IVs of other form
-		\item Suppose, $IV = (2,253,1)$ for recovering $K\textsubscript{3}$
+		\item Suppose, $IV = (2,253,1)$ for recovering $K\textsubscript{3}$ (Question 10)
 		\item Then, after $i=3$ steps, the $S-box$ will have the following form:
 	\end{itemize}
 
@@ -666,15 +670,13 @@
 
 \begin{frame}[fragile]{RC4 Attack}{Determine useful IVs}
 	\begin{thm}
-		Let $kN$ be the keystreambyte at position $n$ we are looking for. We denote $IV \dagger kN$, if the given $IV$ is useful for the attacker to recover $kN$.
-		To check if a given $IV=(x,y,z)$ is useful for the attack, we calculate the $s-box$ until step $i=n$. 
+		Let $kN$ be the keystreambyte at position $n$ we are looking for. We define\\
+		\begin{center}$IV \dagger kN$,
+		\end{center}
+		if the given $IV$ is useful for the attacker to recover $kN$.
+		To check if a given $IV=(x,y,z)$ is useful for the attack, we calculate the $s-box$ until step $i=n$ and apply:
 		$S[i] + S[S[i]] \stackrel{?}{=} n \rightarrow IV \dagger kN$.
 	\end{thm} 
-	\begin{itemize}
-		\item To increase our chances, we can use IVs of other forms as well
-		\item Hier nochmal gucken, wie viele allgemein gut sind, da gabs ne gute Quelle irgendwo!!!!
-		\item Examples for recovering $K\textsubscript{3}$: $(2,253,0)$ (Question 10)
-	\end{itemize}
 \end{frame}
 
 \section{Preventing attacks}
@@ -682,33 +684,55 @@
 \begin{frame}[fragile]{Prevention against RC4 attacks}{Many improved algorithms}
 	\begin{itemize}
 		\item Performance $\leftrightarrow$ Security trade-off
-		\item \textbf{RC4+} offers best security, but 3x execution time
-		\item Uses three layers of scrambling the s-box 
-		\item \textbf{Improved RC4}
-		\item Focus on altering PRGA by adding $\oplus$ operations and using two S-boxes and higher speed
-		\item \textbf{Effective RC4}
-		\item Same KSA as Improved KSA 
-		\item IN PRGA, two output bytes are produces and XORed with plaintext bytes
-		\item Faster and more secure
-		\item \textbf{RC4FMS} focuses on decrasing chances of a succesful FMS attack
-		\item Adds more randomness to the first 4 bytes 
+		\item \textbf{RC4+}: Best security, but 3x execution time
+		\begin{itemize}
+			\item Uses three layers of scrambling the s-box 
+		\end{itemize}
+		\item \textbf{Improved RC4}: Improved security and parallel execution
+		\begin{itemize}
+			\item Focus on altering PRGA by adding $\oplus$ operations and using two S-boxes
+		\end{itemize}
+		\item \textbf{Effective RC4}: Faster and more secure
+		\begin{itemize}
+			\item Same KSA as Improved KSA 
+			\item IN PRGA, two output bytes are produces and XORed with plaintext bytes
+		\end{itemize}
+		\item \textbf{RC4FMS}: Decreased chances of a succesful FMS attack
+		\begin{itemize}
+			\item Adds more randomness to the first 4 bytes 
+		\end{itemize}
 	\end{itemize}
 \end{frame}
 
 \begin{frame}[fragile]{Prevention against RC4 attacks}{Many improved algorithms}
 	\begin{itemize}
-		\item Add 256 more steps to the initialization process and discard them afterwards
-		\item Use alternative protocols such as WPA2/WPA3 with other encryption algorithms
-		\item Increase IV sizes to at least $32$ bits $\rightarrow 2^{8}$ times for attacker to find collisions/useful IVs
-		\item Use other hashing algorithms such as MD5, SHA-1
+		\item Add 256 \textbf{more steps} to the initialization process and discard them afterwards
+		\item Use alternative protocols such as \textbf{WPA2/WPA3} with other encryption algorithms
+		\item \textbf{Increase IV sizes} to at least $32$ bits $\rightarrow 2^{8}$ times for attacker to find collisions/useful IVs (Question 11)
+		\item Use other hashing algorithms such as \textbf{MD5, SHA-1}
 	\end{itemize}
 \end{frame}
 
-\appendix
-\makethankyou
-%\makebibliography
-\bibliography{sources.bib}
+\begin{frame}[fragile]{RC4 summary}{Everything we have learnt}
+	\begin{itemize}
+		\item Invented in 1987 by Ron Rivest as stream cipher with \textbf{variable key length}
+		\item Officially \textbf{outdated} because of too many weaknesses
+		\item Consists of two parts
+		\begin{itemize}
+			\item \textbf{KSA}
+			\item \textbf{PRGA}
+		\end{itemize}
+		\item Used in \textbf{WEP} and \tetxbf{SSL/TLS}, now replaced by other protocols/other encryption algorithms
+		\item In-depth look at specific \textbf{FMS attack on RC4 in WEP}, makes use of weak IVs
+		\item Numerous \textbf{improved RC4 variants} for better security, offer too many \textbf{trade-offs} compared to other algorithms
+	\end{itemize}
+\end{frame}
+%\appendix
 
-\section{\appendixname}
+\makethankyou
+
+\begin{frame}{References}
+\bibliography
+\end{frame}
 
 \end{document}
