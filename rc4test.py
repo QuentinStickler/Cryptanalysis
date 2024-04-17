@@ -2,7 +2,7 @@ from scipy.stats import binom
 
 ___doc___ = '''
 
-File for testing the RC4 algorithm and also trying to crack it
+File for testing the RC4-algorithm
 
 '''
 #region SecondImplmentation
@@ -18,7 +18,7 @@ def initialize(key):
     for i in range(256):
         #Permutate s-box with the given key
         j = (j + sbox[i] + kbox[i]) % 256
-        
+
         #Swap sbox[i] and sbox[j]
         tmp = sbox[i]
         sbox[i] = sbox[j]

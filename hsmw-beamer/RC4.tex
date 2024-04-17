@@ -80,9 +80,10 @@
 \usepackage{setspace}
 \usepackage{listings}
 \usepackage{xcolor}
-\usepackage[natbib=true, backend=biber, style=authoryear, useprefix=true]{biblatex}
+%\usepackage[natbib=true, backend=biber, style=authoryear, useprefix=true]{biblatex}
+\usepackage[style=ieee]{biblatex}
+\setbeamertemplate{bibliography item}{\insertbiblabel}
 \addbibresource{sources.bib}
-\AtBeginBibliography{\small}
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -130,26 +131,24 @@
 	\end{itemize}
 \end{frame}
 
-\section{RC4 Algorithm in detail}
+\section{RC4-Algorithm in detail}
 
-\begin{frame}[fragile]{RC4 Algorithm}{How does it work?}
+\begin{frame}[fragile]{RC4-Algorithm}{How does it work?}
 	\begin{itemize}
 		\item Consists of two parts
 		\item Part 1: Key Scheduling Algorithm \textbf{(KSA)}
 		\item Part 2: Pseudo Random Number Generator Algorithm \textbf{(PRGA)}
-		\item Used in the algorithm:
-		\item S-Box (Array) with length of $256$
-		\item K-Box with repeating key entries
+		\item $S-Box$ (Array) with length of $256$
 		\item Two 8-byte sized counters $i$ and $j$
+		\item State space thus: $(2^{8})^2 * 256! \approx 2^{1700}$ (Question 6)
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Initialization}{Part One: Filling S-Box and T-Box}
+\begin{frame}[fragile]{Initialization}{Part One: Filling S-Box and K-Box}
 	\begin{itemize}
 		\item Counters $i$ and $j$ set to $0$
 		\item Linear filling of the S-Box from $0$ to $255$ ($S[0] = 0$, $S[1] = 1$\dots)
-		\item Following loop will be run:
-		\item State space thus: $(2^{8})^2 * 256! \approx 2^{1700}$ (Question 6)
+		\item Store key bytes in seperate $K-Box$
 	\end{itemize}
 	\begin{lstlisting}[language=Python]
 		for x in range(256):
@@ -164,10 +163,10 @@
 		\item Text = "TestText"
 		\item Key = "TestKey"
 		\item S-Box = $[0, 1, 2, 3 \dots, 255]$
-		\item Initialization of T-Box:
+		\item Initialization of K-Box:
 		\begin{itemize}
 			\item Keylength = 7
-			\item Ascii-Text = $84 101 115 116 75 101 121$
+			\item Ascii-Text = $84$ $101$ $115$ $116$ $75$ $101$ $121$
 		\end{itemize}
 		\medskip
 		$\begin{array}{|ccccccc|}
@@ -197,26 +196,26 @@
 \end{frame}
 
 
-\begin{frame}{Permutation Example}{i = 0}
-	\begin{itemize}
-		\item S-Box Initialization:
-		\medskip
-		$\begin{array}{|ccccccc|}
+\begin{frame}{Permutation Example}{Keystream: [\textcolor{red} {84}, $101$, $115$, $116$, $75$, $101$, $121$]}
+	\medskip
+	$\begin{array}{|ccccccc|}
 		\textcolor{green}{0} & 1 & 2 & 3 & 4 & 5 & 6 \\
 		\dots & \dots & \dots & \dots & \dots & \dots & \dots \\
 		249 & 250 & 251 & 252 & 253 & 254 & 255 \\
-		\end{array}$
+	\end{array}$
+	\medskip
+	\begin{itemize}
 		\item i = \textcolor{green}{0}
 		\item j = (\textcolor{blue} {j} + \textcolor{green}{S[i]} + \textcolor{red}{T[i]}) $\%$ (256)
-		\item j = (\textcolor{blue} {84} + \textcolor{green} {0} + \textcolor{red} {84}) $\%$(256) = 168 $\%$ (256) = $168$
+		\item j = (\textcolor{blue} {0} + \textcolor{green} {0} + \textcolor{red} {84}) $\%$ (256) = 84 $\%$ (256) = $84$
 		\item Swap S[i] (0) and S[j] (84)
 		\item S[i] = $84$, S[j] = $0$
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Permutation Example Continued}{i = 1}
+\begin{frame}{Permutation Example Continued}{Keystream: [$84$, \textcolor{red} {101}, $115$, $116$, $75$, $101$, $121$]}
 	$\begin{array}{|ccccccc|}
-		84 & \textcolor{green}{1} & 2 & 3 & 4 & 5 & 6 \\
+		\textcolor{blue}{84} & \textcolor{green}{1} & 2 & 3 & 4 & 5 & 6 \\
 		\dots & \dots & \dots & \dots & \dots & \dots & \dots \\
 		80 & 81 & 82 & 83 & 0 & 85 & 86 \\
 		\dots & \dots & \dots & \dots & \dots & \dots & \dots \\
@@ -225,25 +224,27 @@
 	\begin{itemize}
 		\item i = \textcolor{green}{1}
 		\item j = (\textcolor{blue} {j} + \textcolor{green}{S[i]} + \textcolor{red}{T[i]}) $\%$ (256)
-		\item j = (\textcolor{blue} {186} + \textcolor{green} {1} + \textcolor{red} {101}) $\%$ (256) = 288 $\%$ (256) = $32$
+		\item j = (\textcolor{blue} {84} + \textcolor{green} {1} + \textcolor{red} {101}) $\%$ (256) = 186 $\%$ (256) = $186$
 		\item Swap S[i] (1) and S[j] (186)
 		\item S[i] = $186$, S[j] = $1$
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Permutation Example Continued}{i = 2}
+\begin{frame}{Permutation Example Continued}{Keystream: [$84$, $101$, \textcolor{red} {115}, $116$, $75$, $101$, $121$]}
 	$\begin{array}{|ccccccc|}
-		84 & 186 & \textcolor{green}{2} & 3 & 4 & 5 & 6 \\
+		84 & \textcolor{blue} {186} & \textcolor{green}{2} & 3 & 4 & 5 & 6 \\
 		\dots & \dots & \dots & \dots & \dots & \dots & \dots \\
 		80 & 81 & 82 & 83 & 0 & 85 & 86 \\
+		\dots & \dots & \dots & \dots & \dots & \dots & \dots \\
+		184 & 185 & 1 & 187 & 188 & 189 & 190\\
 		\dots & \dots & \dots & \dots & \dots & \dots & \dots \\
 		249 & 250 & 251 & 252 & 253 & 254 & 255 \\
 	\end{array}$
 	\begin{itemize}
 		\item i = \textcolor{green}{2}
-		\item j = (\textcolor{blue} {j} + \textcolor{green}{S[i]}) + \textcolor{red}{T[i]} $\%$ (256)
-		\item j = (\textcolor{blue} {47} + \textcolor{green} {2} + \textcolor{red} {115}) $\%$ (256) = 126 $\%$ (256) = $126$
-		\item Swap S[i] (1) and S[j] (47)
+		\item j = (\textcolor{blue} {j} + \textcolor{green}{S[i]} + \textcolor{red}{T[i]}) $\%$ (256)
+		\item j = (\textcolor{blue} {186} + \textcolor{green} {2} + \textcolor{red} {115}) $\%$ (256) = 303 $\%$ (256) = $47$
+		\item Swap S[i] (2) and S[j] (47)
 		\item S[i] = $47$, S[j] = $2$
 	\end{itemize}
 \end{frame}
@@ -347,11 +348,22 @@
 \begin{frame}[fragile]{Decryption}{Bytewise XOR}
 	\small
 	\begin{itemize}
-		\item Ciphertext = "0X320X130X460XA00X160X4A0XB40XA9" = {\color{purple}[50, 19, 70, 160, 22, 74, 180, 169]}
+		\item Ciphertext = "0X320X130X460XA00X160X4A0XB40XA9" = \\{\color{purple}[50, 19, 70, 160, 22, 74, 180, 169]}
 		\item Keystream = {\color{olive}[102, 118, 53, 212, 66, 47, 204, 221]} 
-		\item Ciphertext $\oplus$ Keystream = "Plaintext"
+		\item Ciphertext $\oplus$ Keystream = "TestText"
 	\end{itemize}
 	\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Summary}{RC4-Algorithm}
+	\begin{itemize}
+		\item Consists of two parts
+		\item Part 1: Key Scheduling Algorithm \textbf{(KSA)}
+		\item Part 2: Pseudo Random Number Generator Algorithm \textbf{(PRGA)}
+		\item $S-Box$ (Array) with length of $256$
+		\item Permutate S-box based on given key
+		\item Create a keystream for en-/decrypting texts bytewise
+	\end{itemize}
 \end{frame}
 
 \section{Attacking RC4}
@@ -361,7 +373,7 @@
 		\item Wired Equivalent Protocol
 		\item Used in IEEE 802.11 for protecting LAN users against casual eavesdropping
 		\item Encrypt wirelessly transmitted packets
-		\item Key used for encryption consists of a long-term key (root key) and an initialization vector
+		\item Key used for encryption consists of a long-term key / root key ($rk$) and an initialization vector
 		\item $RC4Key = IV||rk$
 		\item Different public IV per packet, 24-bit-sized; $IV=(X,Y,Z)$
 		\item 40-bit-sized secret $rk$
@@ -383,10 +395,10 @@
 
 \begin{frame}[fragile]{Attacking RC4 in WEP}{Utilizing IVs}
 	\begin{itemize}
-		\item Small key sizes (40-bit $rk$ and 24-bit $IV$) \cite{stovsic2012rc4}
+		\item Small key sizes (40-bit $rk$ and 24-bit $IV$)
 		\item IV is sent clearly together with packets
-		\item Make use of "weak IVs" to recover first byte of every message
-		\item \textbf{FMS attack}
+		\item Make use of "weak IVs" to recover certain byte of every message
+		\item \textbf{FMS attack} by Fluhrer, Shamir and Mantin in 2000
 	\end{itemize}
 \end{frame}
 
@@ -394,11 +406,11 @@
 	\begin{itemize}
 		\item Cryptanalysis Trudy graps a lot of transfered data
 		\item Tries to catch IVs of specific forms 
-		\item Goal $\rightarrow$ Recover the long-term key $\rightarrow$ Then she can decrypt all the ciphertexts
+		\item Goal $\rightarrow$ Recover $rk$ $\rightarrow$ Then she can decrypt all the ciphertexts
 		\item Example: $ IV = (3, N-1, V)$ , where $N-1 = 255, V$ any value ${1,\dots,255}$
-		\item Long-term-key of the form $(3, 255, V, K\textsubscript{3}, K\textsubscript{4},K\textsubscript{5})$
+		\item RC4-key of form $(3, 255, V, K\textsubscript{3}, K\textsubscript{4},K\textsubscript{5})$
 		\item $K\textsubscript{3}, K\textsubscript{4},K\textsubscript{5}$ are the first unknown keybytes
-		\item Clue is in the initialization phase
+		\item Exploiting the initialization phase
 	\end{itemize}
 \end{frame}
 
@@ -406,7 +418,7 @@
 	\begin{itemize}
 		\item Suppose, Trudy has recoverd $IV = (\textcolor{green}{3}, 255, V)$ 
 		\item Used for recovering Example for $K\textsubscript{\textcolor{green}{3}}$
-		\item Let's look at our S-Box during the initialization phase
+		\item Study S-Box during the initialization phase
 		\item First, $S$ is set to the identitity permutation
 		\medskip
 		\begin{table}[h!]
@@ -425,7 +437,7 @@
 \begin{frame}[fragile]{Attacks on RC4}{Example for K\textsubscript{3}}
 	\begin{itemize}
 		\item Now, at the first step $i=0$, we compute the next $j$
-		\item $j = j + S\textsubscript{i} + K\textsubscript{1} = 0 + 0 + 3$ $\% (256) = 3$
+		\item $j = j + S\textsubscript{i} + K\textsubscript{i} = 0 + 0 + 3$ $\% (256) = 3$
 		\item Thus, the elements at position $S\textsubscript{i}$ and $S\textsubscript{j}$ are swapped
 		\medskip
 		\begin{table}[h!]
@@ -442,7 +454,7 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Attacks on RC4}{Example for K\textsubscript{3} Cont'd}
+\begin{frame}[fragile]{Attacks on RC4}{Example for K\textsubscript{3} Continued}
 
 	\begin{table}[h!]
 		\begin{center}
@@ -496,6 +508,97 @@
 
 \end{frame}
 
+\begin{frame}[fragile]{RC4 Attack}{Recover $K\textsubscript{3}$}
+
+	\begin{lstlisting}[language=Python]
+		keystream = []
+		i = 0
+		j = 0
+		for x in range(len(text)):
+			i = (i + 1) % 256
+			j = (sbox[i] + j) % 256
+			Swap(sbox[i], sbox[j])
+			keystream.append(sbox[(sbox[i] + sbox[j]) % 256])    
+		return keystream   
+	\end{lstlisting}
+	\begin{itemize}
+		\item i = $1$, j = $0$
+		\item $K\textsubscript{B} = (6 + V + K\textsubscript{3})$ $\% (256)$
+	\end{itemize}
+
+\end{frame}
+
+\begin{frame}[fragile]{RC4 Attack}{Recover $K\textsubscript{3}$ Continued}
+
+	\begin{itemize}
+		\item $K\textsubscript{B} = (6 + V + K\textsubscript{3})$ $\% (256)$
+		\item Suppose, Trudy can guess or knows the first byte of the plaintext, she can determine $K\textsubscript{3}$ with:
+		\item $\rightarrow$ $K\textsubscript{3}  = K\textsubscript{B} - 6 - V$ $\% (256)$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Recovery of unknwon bytes}{General approach} 
+	\begin{thm}
+		Let $ K\textsubscript{n} $ be the RC4 key value at position $ n $. Let $ IV\textsubscript{n} $ be a tuple of $ (n, N-1, V) $,
+		where $ N = 256, V \in {{0,\dots,255}}, n \geq 3 $ and $ k\textsubscript{n} $ the known keystreambyte at position $n$. Then (Question 8): \\
+		\begin{center}
+			$K\textsubscript{n} = k\textsubscript{n} - \sum_{1}^{n}x - V - (\sum_{3}^{n-1}K\textsubscript{n})$
+		\end{center}
+	\end{thm} 
+	\begin{itemize}
+		\item How many IVs are sufficient to determine $ K\textsubscript{n} $?
+		\item Determine probability that $ S\textsubscript{0}$, $S\textsubscript{1}$, $S\textsubscript{n} $ remain unchanged
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{RC4 Attack}{Probability of recovering $K\textsubscript{n}$}
+	\begin{thm}
+		Let $Kn$ be the unknown key byte at position n, $N=256$ and $p = N-(n+1)$. Then the probability that the values in the given $S-box$ at position $S\textsubscript{0}$,
+		$S\textsubscript{1}$ and $S\textsubscript{n}$ will remain unchanged for $p$ steps, equals:\\
+		\begin{center}
+			$(\frac{253}{N})\textsuperscript{p}$
+		\end{center}
+	\end{thm} 
+	\begin{itemize}
+		\item Probability for recovering $K\textsubscript{3}$: $(\frac{253}{256})\textsuperscript{252} = 0.0513 \approx 5\%$ (Question 9)
+		\item What is a sufficient number of IVs in order to recover $K\textsubscript{3}$?
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{RC4 Attack}{Probability of recovering $K\textsubscript{3}$}
+	\begin{lstlisting}[language=Python]
+		success_probability = 0.05
+		#Win probability
+		target_probability = 0.95
+		num_trials = 1
+
+		#Go through the IVs
+		while True:
+			cumulative_probability = 1 - binom.cdf(0, num_trials, success_probability)
+			if cumulative_probability >= target_probability:
+				break
+			num_trials += 1
+		return num_trials
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{RC4 Attack}{Probability of recovering $K\textsubscript{3}$}
+	\begin{itemize}
+		\item How many IVs needed for 
+		\item $50\% \rightarrow$ $14$
+		\item $95\% \rightarrow$ $60$
+		\item Hence, $60$ often regarded as sufficient for determining $K\textsubscript{3}$ (Question 7)
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{RC4 Attack}{Probability of recovering $K\textsubscript{n}$}
+	\begin{itemize}
+		\item Probability for recovering $K\textsubscript{4}$: $(\frac{253}{256})\textsuperscript{251} = 0.0518$
+		\item Probability for recovering $K\textsubscript{5}$: $(\frac{253}{256})\textsuperscript{250} = 0.0525$
+		\item Chance gets higher as we move through the $S-box$
+	\end{itemize}
+\end{frame}
+
 \begin{frame}[fragile]{Attacks on RC4}{Example for K\textsubscript{4} and K\textsubscript{5}: Last step}
 	\begin{itemize}
 		\item $IV = (4,255,V)$ for $K\textsubscript{4}$ after $i=4$ steps:
@@ -545,130 +648,7 @@
 
 \end{frame}
 
-\begin{frame}[fragile]{RC4 Attack}{Recover $K\textsubscript{3}$}
-
-	\begin{lstlisting}[language=Python]
-		keystream = []
-		i = 0
-		j = 0
-		for x in range(len(text)):
-			i = (i + 1) % 256
-			j = (sbox[i] + j) % 256
-			Swap(sbox[i], sbox[j])
-			keystream.append(sbox[(sbox[i] + sbox[j]) % 256])    
-		return keystream   
-	\end{lstlisting}
-	\begin{itemize}
-		\item i = $1$, j = $0$
-		\item $K\textsubscript{B} = (6 + V + K\textsubscript{3})$ $\% (256)$
-	\end{itemize}
-
-\end{frame}
-
-\begin{frame}[fragile]{RC4 Attack}{Recover $K\textsubscript{3}$ Continued}
-
-	\begin{itemize}
-		\item $K\textsubscript{B} = (6 + V + K\textsubscript{3})$ $\% (256)$
-		\item Suppose, Trudy can guess or knows the first byte of the plaintext, she can determine $K\textsubscript{3}$ with:
-		\item $\rightarrow$ $K\textsubscript{3}  = K\textsubscript{B} - 6 - V$ $\% (256)$
-	\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{Recovery of unknwon bytes}{General approach} 
-	\begin{thm}
-		Let $ K\textsubscript{n} $ be the RC4 key value at position $ n $. Let $ IV\textsubscript{n} $ be a tuple of $ (n, N-1, V) $,
-		where $ N = 256, V \in {{0,\dots,255}}, n \geq 3 $ and $ k\textsubscript{n} $ the known keystreambyte at position $n$. Then (Question 8): \\
-		\begin{center}
-			$K\textsubscript{n} = k\textsubscript{n} - \sum_{1}^{n}x - V - (\sum_{3}^{n-1}K\textsubscript{n})$
-		\end{center}
-	\end{thm} 
-	\begin{itemize}
-		\item How many IVs are sufficient to determine $ K\textsubscript{n} $?
-		\item Determine probability that $ S\textsubscript{0}$, $S\textsubscript{1}$, $S\textsubscript{n} $ remain unchanged
-		\item Probability of that: $(\frac{253}{256})\textsuperscript{252} = 0.0513 \approx 5\%$ (Question 9)
-		\item What is a sufficient number of IVs in order to recover $K\textsubscript{3}$?
-	\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{RC4 Attack}{Probability of recovering $K\textsubscript{3}$}
-	\begin{lstlisting}[language=Python]
-		success_probability = 0.05
-		#Win probability
-		target_probability = 0.95
-		num_trials = 1
-
-		#Go through the IVs
-		while True:
-			cumulative_probability = 1 - binom.cdf(0, num_trials, success_probability)
-			if cumulative_probability >= target_probability:
-				break
-			num_trials += 1
-		return num_trials
-	\end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{RC4 Attack}{Probability of recovering $K\textsubscript{3}$}
-	\begin{itemize}
-		\item How many IVs needed for 
-		\item $50\% \rightarrow$ $14$
-		\item $95\% \rightarrow$ $60$
-		\item Hence, $60$ often regarded as sufficient for determing $K\textsubscript{3}$ (Question 7)
-		\item Hier nochmal gucken, was die Wahrscheinlichkeit ist, solche IVs zu bekommen 
-		\item Ich braeuchte laut meinem Code 5 Millionen lol
-	\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{RC4 Attack}{Probability of recovering $K\textsubscript{n}$}
-	\begin{itemize}
-		\item Same probability for recovering $K\textsubscript{4}$, $K\textsubscript{5}$,\dots
-		\item If correct $IV$ is found
-	\end{itemize}
-		\bigskip
-		\small
-		\begin{tabular}{l|c|c|c|c|c|c|c|c|c}
-		$i$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 + V & 9 + V + K3 & 10 + V + K3 + K4\\
-		\hline
-		$S\textsubscript{i}$ & 4 & 0 & 6 + V & 9 + V + K3 & 10 + V + K3 + K4 & 5 & 2 & 3 & 1\\
-		\end{tabular}
-		\normalsize
-\end{frame}
-
-\begin{frame}[fragile]{RC4 Attack}{Probability of recovering $K\textsubscript{n}$}
-	\small
-	\begin{lstlisting}[language=Python]
-		for x in range(plaintextlength):
-			i = (i + 1) % 256
-			j = (j + S[i]) % 256
-			currentValue = S[i]
-			S[i] = S[j]
-			S[j] = currentValue
-			t = (S[i] + S[j]) % 256
-			keystream.append(S[t])
-		return keystream
-	\end{lstlisting}
-	\normalsize
-
-	\begin{itemize}
-		\item $kB = S[t] = S[4] = 10 + V + K\textsubscript{3} + K\textsubscript{4}$
-	\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{RC4 Attack}{Probability of recovering $K\textsubscript{n}$}
-	\begin{itemize}
-		\item $\rightarrow$ Same probability for recovering $K\textsubscript{n}$
-		\item Also doable with IVs of other form
-		\item Suppose, $IV = (2,253,1)$ for recovering $K\textsubscript{3}$ (Question 10)
-		\item Then, after $i=3$ steps, the $S-box$ will have the following form:
-	\end{itemize}
-
-	\begin{tabular}{l|c|c|c|c|c|c|r}
-		$i$ & 0 & 1 & 2 & 3 & \dots & 3 + $K\textsubscript{3}$ & \dots \\
-		\hline
-		$S\textsubscript{i}$ & 0 & 2 & 1 & 3 +$K\textsubscript{3}$ & \dots & 3 & \dots\\
-	\end{tabular}
-\end{frame}
-
-\begin{frame}[fragile]{RC4 Attack}{Determine useful IVs}
+\begin{frame}[fragile]{RC4 Attack}{How to determine useful IVs}
 	\begin{thm}
 		Let $kN$ be the keystreambyte at position $n$ we are looking for. We define\\
 		\begin{center}$IV \dagger kN$,
@@ -677,6 +657,12 @@
 		To check if a given $IV=(x,y,z)$ is useful for the attack, we calculate the $s-box$ until step $i=n$ and apply:
 		$S[i] + S[S[i]] \stackrel{?}{=} n \rightarrow IV \dagger kN$.
 	\end{thm} 
+\end{frame}
+
+\begin{frame}[fragile]{Usefule IV example}{For $K\textsubscript{3}$ (Question 10)}
+	\begin{itemize}
+		$IV=(2,253,1)$ $\dagger$ $k3?$ 
+	\end{itemize}
 \end{frame}
 
 \section{Preventing attacks}
@@ -704,7 +690,7 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Prevention against RC4 attacks}{Many improved algorithms}
+\begin{frame}[fragile]{Increase WEP security}{With regrads to RC4}
 	\begin{itemize}
 		\item Add 256 \textbf{more steps} to the initialization process and discard them afterwards
 		\item Use alternative protocols such as \textbf{WPA2/WPA3} with other encryption algorithms
@@ -731,8 +717,8 @@
 
 \makethankyou
 
-\begin{frame}{References}
-\bibliography
+\begin{frame}
+\printbibliography
 \end{frame}
 
 \end{document}
