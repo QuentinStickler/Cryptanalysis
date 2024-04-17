@@ -39,8 +39,10 @@ def stream_generation(sbox, text):
         tmp = sbox[j]
         sbox[j] = sbox[i]
         sbox[i] = tmp
+
+        result = sbox[i] + sbox[j] % 256
         
-        keystream.append(sbox[(sbox[i] + sbox[j]) % 256])    
+        keystream.append(sbox[result])    
     return keystream    
 
 

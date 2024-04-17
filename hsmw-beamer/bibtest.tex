@@ -1,7 +1,7 @@
 \documentclass[
 	aspectratio=169,	% Modern aspect ratio (TODO: Other ratios not yet supported)
 	onlytextwidth,		% Sets totalwidth=\textwidth and therefore e.g. columns won't invade the margins
-	t					% Default vertical alignment of frames and colums at top (default is centered) % Stored in \beamer@centered (\beamer@centeredfalse, \beamer@centeredtrue)
+	t,					% Default vertical alignment of frames and colums at top (default is centered) % Stored in \beamer@centered (\beamer@centeredfalse, \beamer@centeredtrue)
 %	handout,			% Create a basic handout of the presentation (removes overlays)
 	]{beamer}
 
@@ -23,13 +23,13 @@
 % Additional style options not completely conforming to the corporate design
 	titlepagedate,		% Shows the date on the titelpage
 %	fancystyle,			% Enables some fancy styles, that are not part of the corporate design specifications (default: off)
-%	progressbar,		% Shows the progressbar in footline (run twice to update progressbar)
+	progressbar,		% Shows the progressbar in footline (run twice to update progressbar)
 	]{hsmw} 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 2) Specify default fields for presentation and pdf document properties
 % Set the title: \title{Long title everywhere} or \title[Short title for footline]{Long title for titlepage}
-\title[RC4-Algorithm]{RC4-Algorithm}
+\title[Bib-Test]{Why not working?}
 % Authors (separate multiple author names e.g. with \and for additional space): \author{author for everywhere} or \author[author for footline]{author for titlepage and thankyouslide}
 \author[Quentin Stickler]{Quentin Stickler, B.Sc.}
 % Institute (will be prefilled automatically, depending on chosen faculty theme option): \institute{institute for everywhere} or \institute[institute for footline and thankyouslide]{institute for titlepage}
@@ -124,76 +124,10 @@
 		\item Kept secret but got leaked in 1994
 		\item \textbf{Easy} to implement and quite \textbf{fast} (Encryption up to 10x faster than DES)
 		\item Offers a \textbf{lot of weaknesses und vulnerabilities}
-		\item Better alternatives have been invented
+		\item Better alternatives have been invented \cite{woungang20192nd}
 		\item Now only used in private projects due to its simplicity and performance
 	\end{itemize}
 \end{frame}
-
-\section{RC4-Algorithm in detail}
-
-\begin{frame}[fragile]{RC4-Algorithm}{How does it work?}
-	\begin{itemize}
-		\item Consists of two parts
-		\begin{itemize}
-			\item Part 1: Key Scheduling Algorithm \textbf{(KSA)}
-			\item Part 2: Pseudo Random Number Generator Algorithm \textbf{(PRGA)}
-		\end{itemize}
-		\item $S-Box$ (Array) with length of $256$
-		\item Two 8-byte sized counters $i$ and $j$
-		\item State space thus: $(2^{8})^2 * 256! \approx 2^{1700}$ (Question 6)
-	\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{Initialization}{Part One: Filling S-Box and K-Box}
-	\begin{itemize}
-		\item Counters $i$ and $j$ set to $0$
-		\item Linear filling of the S-Box from $0$ to $255$ ($S[0] = 0$, $S[1] = 1$\dots)
-		\item Store key bytes in seperate $K-Box$
-	\end{itemize}
-	\begin{lstlisting}[language=Python]
-		for x in range(256):
-			sbox[x] = x
-			kbox[x] = key[x % len(key)]
-	\end{lstlisting}
-\end{frame}
-
-
-\begin{frame}{Initialization}{Example}
-	\begin{itemize}
-		\item Text = "TestText"
-		\item Key = "TestKey"
-		\item S-Box = $[0, 1, 2, 3 \dots, 255]$
-		\item Initialization of K-Box:
-		\begin{itemize}
-			\item Keylength = 7
-			\item Ascii-Text = $84$ $101$ $115$ $116$ $75$ $101$ $121$
-		\end{itemize}
-		\medskip
-		$\begin{array}{|ccccccc|}
-		84 & 101 & 115 & 116 & 75 & 101 & 121 \\
-		84 & 101 & 115 & 116 & 75 & 101 & 121 \\
-		\dots & \dots & \dots & \dots & \dots & \dots & \dots \\
-		\dots & \dots & \dots & 84 & 101 & 115 & 116 \\
-		\end{array}$
-	\end{itemize}
-\end{frame}
-
-
-\begin{frame}[fragile]{Initialization}{Part Two: Permutation}
-	\begin{itemize}
-		\item Permutate S-Box based on given key
-		\item We always use modulo $n = 256$ because of the given length
-		\begin{lstlisting}[language=Python]
-			j = 0
-			for i in range(256):
-				j = (j + sbox[i] + kbox[i]) % 256
-				Swap(sbox[i], sbox[j])
-			return sbox
-		\end{lstlisting}
-		\item At the end: (Pseudo-)randomly generated S-Box \cite{woungang20192nd}
-	\end{itemize}
-\end{frame}
-
 
 \begin{frame}{Permutation Example}{Keystream: [\textcolor{red} {84}, $101$, $115$, $116$, $75$, $101$, $121$]}
 	\medskip
@@ -204,7 +138,7 @@
 	\end{array}$
 	\medskip
 	\begin{itemize}
-		\item i = \textcolor{green}{0}, j = \textcolor{blue}{0}
+		\item i = \textcolor{green}{0}
 		\item j = (\textcolor{blue} {j} + \textcolor{green}{S[i]} + \textcolor{red}{K[i]}) $\%$ (256)
 		\item j = (\textcolor{blue} {0} + \textcolor{green} {0} + \textcolor{red} {84}) $\%$ (256) = 84 $\%$ (256) = $84$
 		\item Swap S[i] (0) and S[j] (84)
@@ -221,7 +155,7 @@
 		249 & 250 & 251 & 252 & 253 & 254 & 255 \\
 	\end{array}$
 	\begin{itemize}
-		\item i = \textcolor{green}{1}, j = \textcolor{blue} {84}
+		\item i = \textcolor{green}{1}
 		\item j = (\textcolor{blue} {j} + \textcolor{green}{S[i]} + \textcolor{red}{K[i]}) $\%$ (256)
 		\item j = (\textcolor{blue} {84} + \textcolor{green} {1} + \textcolor{red} {101}) $\%$ (256) = 186 $\%$ (256) = $186$
 		\item Swap S[i] (1) and S[j] (186)
@@ -240,7 +174,7 @@
 		249 & 250 & 251 & 252 & 253 & 254 & 255 \\
 	\end{array}$
 	\begin{itemize}
-		\item i = \textcolor{green}{2}, j = \textcolor{blue}{186}
+		\item i = \textcolor{green}{2}
 		\item j = (\textcolor{blue} {j} + \textcolor{green}{S[i]} + \textcolor{red}{K[i]}) $\%$ (256)
 		\item j = (\textcolor{blue} {186} + \textcolor{green} {2} + \textcolor{red} {115}) $\%$ (256) = 303 $\%$ (256) = $47$
 		\item Swap S[i] (2) and S[j] (47)
@@ -290,8 +224,7 @@
 				j = (sbox[i] + j) % 256
 				
 				Swap(sbox[i], sbox[j])
-				result = sbox[i] + sbox[j] % 256
-				keystream.append(sbox[result])   
+				keystream.append(sbox[(sbox[i] + sbox[j]) % 256])    
 			return keystream   
 		\end{lstlisting}
 	\end{itemize}
@@ -357,14 +290,12 @@
 
 \begin{frame}[fragile]{Summary}{RC4-Algorithm}
 	\begin{itemize}
-		\item Split up into two parts
-		\begin{itemize}
-			\item Part 1: Key Scheduling Algorithm \textbf{(KSA)}
-			\item Part 2: Pseudo Random Number Generator Algorithm \textbf{(PRGA)}
-		\end{itemize}
+		\item Consists of two parts
+		\item Part 1: Key Scheduling Algorithm \textbf{(KSA)}
+		\item Part 2: Pseudo Random Number Generator Algorithm \textbf{(PRGA)}
 		\item $S-Box$ (Array) with length of $256$
 		\item Permutate S-box based on given key
-		\item Create a keystream for $\oplus$ en-/decrypting texts bytewise
+		\item Create a keystream for en-/decrypting texts bytewise
 	\end{itemize}
 \end{frame}
 
@@ -399,7 +330,7 @@
 	\begin{itemize}
 		\item Small key sizes (40-bit $rk$ and 24-bit $IV$)
 		\item IV is sent clearly together with packets
-		\item Make use of "weak IVs" to recover $rK$ byte for byte
+		\item Make use of "weak IVs" to recover certain byte of every message
 		\item \textbf{FMS attack} by Fluhrer, Shamir and Mantin in 2000
 	\end{itemize}
 \end{frame}
@@ -407,19 +338,19 @@
 \begin{frame}[fragile]{FMS attack on RC4}{General process}
 	\begin{itemize}
 		\item Cryptanalysis Trudy graps a lot of transfered data
+		\item Tries to catch IVs of specific forms 
 		\item Goal $\rightarrow$ Recover $rk$ $\rightarrow$ Then she can decrypt all the ciphertexts
-		\item Tries to catch $IVs$ of specific forms 
 		\item Example: $ IV = (3, N-1, V)$ , where $N-1 = 255, V$ any value ${0,\dots,255}$
-		\item RC4-key of form $(3, 255, V, K\textsubscript{3}, K\textsubscript{4},K\textsubscript{5}, \dots)$
-		\item $K\textsubscript{3}, K\textsubscript{4},K\textsubscript{5},\dots$ are the first unknown keybytes
+		\item RC4-key of form $(3, 255, V, K\textsubscript{3}, K\textsubscript{4},K\textsubscript{5})$
+		\item $K\textsubscript{3}, K\textsubscript{4},K\textsubscript{5}$ are the first unknown keybytes
 		\item Exploiting the initialization phase
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Attacks on RC4}{Example for $K\textsubscript{3}$}
+\begin{frame}[fragile]{Attacks on RC4}{Example for K\textsubscript{3}}
 	\begin{itemize}
 		\item Suppose, Trudy has recoverd $IV = (\textcolor{green}{3}, 255, V)$ 
-		\item Used for recovering $K\textsubscript{\textcolor{green}{3}}$
+		\item Used for recovering Example for $K\textsubscript{\textcolor{green}{3}}$
 		\item Study S-Box during the initialization phase
 		\item First, $S$ is set to the identitity permutation
 	\end{itemize}
@@ -435,9 +366,9 @@
 	\end{table}
 \end{frame}
 
-\begin{frame}[fragile]{Attacks on RC4}{Example for $K\textsubscript{3}$ with $IV=(3,255,V)$}
+\begin{frame}[fragile]{Attacks on RC4}{Example for K\textsubscript{3}}
 	\begin{itemize}
-		\item At the first step $i=0$, we compute the next $j$
+		\item Now, at the first step $i=0$, we compute the next $j$
 		\item $j = j + S\textsubscript{i} + K\textsubscript{i} = 0 + 0 + 3$ $\% (256) = 3$
 		\item Thus, the elements at position $S\textsubscript{i}$ and $S\textsubscript{j}$ are swapped
 		\medskip
@@ -455,7 +386,7 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Attacks on RC4}{Example for $K\textsubscript{3}$ with $IV=(3,255,V)$ continued}
+\begin{frame}[fragile]{Attacks on RC4}{Example for K\textsubscript{3} Continued}
 
 	\begin{table}[h!]
 		\begin{center}
@@ -484,7 +415,7 @@
 
 \end{frame}
 
-\begin{frame}[fragile]{Attacks on RC4}{Example for $K\textsubscript{3}$ with $IV=(3,255,V)$: Continued}
+\begin{frame}[fragile]{Attacks on RC4}{Example for K\textsubscript{3}: Last step}
 
 	
 	\begin{itemize}
@@ -503,12 +434,13 @@
 	\end{table}
 
 	\begin{itemize}
-		\item Suppose $S\textsubscript{0}, S\textsubscript{1}$ and $S\textsubscript{3}$ will remain unchanged until step $i = 255$
+		\item Suppose$ S\textsubscript{0}, S\textsubscript{1}$ and $S\textsubscript{3}$ will remain unchanged until step $i = 255$
 		\item Then, the first keystreambyte will be computed following the keystream generator algorithm
 	\end{itemize}
+
 \end{frame}
 
-\begin{frame}[fragile]{RC4 Attack}{Recover $K\textsubscript{3}$ with $IV=(3,255,V)$: Last step}
+\begin{frame}[fragile]{RC4 Attack}{Recover $K\textsubscript{3}$}
 
 	\begin{lstlisting}[language=Python]
 		keystream = []
@@ -518,8 +450,7 @@
 			i = (i + 1) % 256
 			j = (sbox[i] + j) % 256
 			Swap(sbox[i], sbox[j])
-			result = sbox[i] + sbox[j] % 256
-			keystream.append(sbox[result])   
+			keystream.append(sbox[(sbox[i] + sbox[j]) % 256])    
 		return keystream   
 	\end{lstlisting}
 	\begin{itemize}
@@ -600,7 +531,7 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Attacks on RC4}{Example for $K\textsubscript{4}$ and K\textsubscript{5}: Last step}
+\begin{frame}[fragile]{Attacks on RC4}{Example for K\textsubscript{4} and K\textsubscript{5}: Last step}
 	\begin{itemize}
 		\item $IV = (4,255,V)$ for $K\textsubscript{4}$ after $i=4$ steps:
 	\end{itemize}
@@ -655,71 +586,18 @@
 		\begin{center}$IV \dagger kN$,
 		\end{center}
 		if the given $IV$ is useful for the attacker to recover $kN$.
-		To check if a given $IV=(x,y,z)$ is useful for the attack, we calculate the $s-box$ until step $i=n$ and apply:
+		To check if a given $IV=(x,y,z)$ is useful for the attack, 
+        we calculate the $s-box$ until step $i=n$ and apply:
 		$S[i] + S[S[i]] \stackrel{?}{=} n \rightarrow IV \dagger kN$.
 	\end{thm} 
 \end{frame}
 
-\begin{frame}[fragile]{Usefule IV example}{For $K\textsubscript{3}$ (Question 10)}
-	\begin{itemize}
-		$IV=(2,253,1)$ $\dagger$ $k3?$ 
-	\end{itemize}
-\end{frame}
-
-\section{Preventing attacks}
-
-\begin{frame}[fragile]{Prevention against RC4 attacks}{Many improved algorithms}
-	\begin{itemize}
-		\item Performance $\leftrightarrow$ Security trade-off
-		\item \textbf{RC4+}: Best security, but 3x execution time
-		\begin{itemize}
-			\item Uses three layers of scrambling the s-box 
-		\end{itemize}
-		\item \textbf{Improved RC4}: Improved security and parallel execution
-		\begin{itemize}
-			\item Focus on altering PRGA by adding $\oplus$ operations and using two S-boxes
-		\end{itemize}
-		\item \textbf{Effective RC4}: Faster and more secure
-		\begin{itemize}
-			\item Same KSA as Improved KSA 
-			\item IN PRGA, two output bytes are produces and XORed with plaintext bytes
-		\end{itemize}
-		\item \textbf{RC4FMS}: Decreased chances of a succesful FMS attack
-		\begin{itemize}
-			\item Adds more randomness to the first 4 bytes 
-		\end{itemize}
-	\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{Increase WEP security}{With regrads to RC4}
-	\begin{itemize}
-		\item Add 256 \textbf{more steps} to the initialization process and discard them afterwards
-		\item Use alternative protocols such as \textbf{WPA2/WPA3} with other encryption algorithms
-		\item \textbf{Increase IV sizes} to at least $32$ bits $\rightarrow 2^{8}$ times for attacker to find collisions/useful IVs (Question 11)
-		\item Use other hashing algorithms such as \textbf{MD5, SHA-1}
-	\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{RC4 summary}{Everything we have learnt}
-	\begin{itemize}
-		\item Invented in 1987 by Ron Rivest as stream cipher with \textbf{variable key length}
-		\item Officially \textbf{outdated} because of too many weaknesses
-		\item Consists of two parts
-		\begin{itemize}
-			\item \textbf{KSA}
-			\item \textbf{PRGA}
-		\end{itemize}
-		\item Used in \textbf{WEP} and \textbf{SSL/TLS}, now replaced by other protocols/other encryption algorithms
-		\item In-depth look at specific \textbf{FMS attack on RC4 in WEP}, makes use of weak IVs
-		\item Numerous \textbf{improved RC4 variants} for better security, offer too many \textbf{trade-offs} compared to other algorithms
-	\end{itemize}
-\end{frame}
 \appendix
 
 \makethankyou
 
 \begin{frame}
-	\printbibliography
+    \printbibliography
 \end{frame}
 
 \end{document}

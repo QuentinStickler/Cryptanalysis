@@ -204,7 +204,7 @@
 	\end{array}$
 	\medskip
 	\begin{itemize}
-		\item i = \textcolor{green}{0}, j = \textcolor{blue}{0}
+		\item i = \textcolor{green}{0}
 		\item j = (\textcolor{blue} {j} + \textcolor{green}{S[i]} + \textcolor{red}{K[i]}) $\%$ (256)
 		\item j = (\textcolor{blue} {0} + \textcolor{green} {0} + \textcolor{red} {84}) $\%$ (256) = 84 $\%$ (256) = $84$
 		\item Swap S[i] (0) and S[j] (84)
@@ -221,7 +221,7 @@
 		249 & 250 & 251 & 252 & 253 & 254 & 255 \\
 	\end{array}$
 	\begin{itemize}
-		\item i = \textcolor{green}{1}, j = \textcolor{blue} {84}
+		\item i = \textcolor{green}{1}
 		\item j = (\textcolor{blue} {j} + \textcolor{green}{S[i]} + \textcolor{red}{K[i]}) $\%$ (256)
 		\item j = (\textcolor{blue} {84} + \textcolor{green} {1} + \textcolor{red} {101}) $\%$ (256) = 186 $\%$ (256) = $186$
 		\item Swap S[i] (1) and S[j] (186)
@@ -240,7 +240,7 @@
 		249 & 250 & 251 & 252 & 253 & 254 & 255 \\
 	\end{array}$
 	\begin{itemize}
-		\item i = \textcolor{green}{2}, j = \textcolor{blue}{186}
+		\item i = \textcolor{green}{2}
 		\item j = (\textcolor{blue} {j} + \textcolor{green}{S[i]} + \textcolor{red}{K[i]}) $\%$ (256)
 		\item j = (\textcolor{blue} {186} + \textcolor{green} {2} + \textcolor{red} {115}) $\%$ (256) = 303 $\%$ (256) = $47$
 		\item Swap S[i] (2) and S[j] (47)
@@ -290,8 +290,7 @@
 				j = (sbox[i] + j) % 256
 				
 				Swap(sbox[i], sbox[j])
-				result = sbox[i] + sbox[j] % 256
-				keystream.append(sbox[result])   
+				keystream.append(sbox[(sbox[i] + sbox[j]) % 256])    
 			return keystream   
 		\end{lstlisting}
 	\end{itemize}
@@ -357,14 +356,12 @@
 
 \begin{frame}[fragile]{Summary}{RC4-Algorithm}
 	\begin{itemize}
-		\item Split up into two parts
-		\begin{itemize}
-			\item Part 1: Key Scheduling Algorithm \textbf{(KSA)}
-			\item Part 2: Pseudo Random Number Generator Algorithm \textbf{(PRGA)}
-		\end{itemize}
+		\item Consists of two parts
+		\item Part 1: Key Scheduling Algorithm \textbf{(KSA)}
+		\item Part 2: Pseudo Random Number Generator Algorithm \textbf{(PRGA)}
 		\item $S-Box$ (Array) with length of $256$
 		\item Permutate S-box based on given key
-		\item Create a keystream for $\oplus$ en-/decrypting texts bytewise
+		\item Create a keystream for en-/decrypting texts bytewise
 	\end{itemize}
 \end{frame}
 
@@ -399,7 +396,7 @@
 	\begin{itemize}
 		\item Small key sizes (40-bit $rk$ and 24-bit $IV$)
 		\item IV is sent clearly together with packets
-		\item Make use of "weak IVs" to recover $rK$ byte for byte
+		\item Make use of "weak IVs" to recover certain byte of every message
 		\item \textbf{FMS attack} by Fluhrer, Shamir and Mantin in 2000
 	\end{itemize}
 \end{frame}
@@ -407,19 +404,19 @@
 \begin{frame}[fragile]{FMS attack on RC4}{General process}
 	\begin{itemize}
 		\item Cryptanalysis Trudy graps a lot of transfered data
+		\item Tries to catch IVs of specific forms 
 		\item Goal $\rightarrow$ Recover $rk$ $\rightarrow$ Then she can decrypt all the ciphertexts
-		\item Tries to catch $IVs$ of specific forms 
 		\item Example: $ IV = (3, N-1, V)$ , where $N-1 = 255, V$ any value ${0,\dots,255}$
-		\item RC4-key of form $(3, 255, V, K\textsubscript{3}, K\textsubscript{4},K\textsubscript{5}, \dots)$
-		\item $K\textsubscript{3}, K\textsubscript{4},K\textsubscript{5},\dots$ are the first unknown keybytes
+		\item RC4-key of form $(3, 255, V, K\textsubscript{3}, K\textsubscript{4},K\textsubscript{5})$
+		\item $K\textsubscript{3}, K\textsubscript{4},K\textsubscript{5}$ are the first unknown keybytes
 		\item Exploiting the initialization phase
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Attacks on RC4}{Example for $K\textsubscript{3}$}
+\begin{frame}[fragile]{Attacks on RC4}{Example for K\textsubscript{3}}
 	\begin{itemize}
 		\item Suppose, Trudy has recoverd $IV = (\textcolor{green}{3}, 255, V)$ 
-		\item Used for recovering $K\textsubscript{\textcolor{green}{3}}$
+		\item Used for recovering Example for $K\textsubscript{\textcolor{green}{3}}$
 		\item Study S-Box during the initialization phase
 		\item First, $S$ is set to the identitity permutation
 	\end{itemize}
@@ -435,9 +432,9 @@
 	\end{table}
 \end{frame}
 
-\begin{frame}[fragile]{Attacks on RC4}{Example for $K\textsubscript{3}$ with $IV=(3,255,V)$}
+\begin{frame}[fragile]{Attacks on RC4}{Example for K\textsubscript{3}}
 	\begin{itemize}
-		\item At the first step $i=0$, we compute the next $j$
+		\item Now, at the first step $i=0$, we compute the next $j$
 		\item $j = j + S\textsubscript{i} + K\textsubscript{i} = 0 + 0 + 3$ $\% (256) = 3$
 		\item Thus, the elements at position $S\textsubscript{i}$ and $S\textsubscript{j}$ are swapped
 		\medskip
@@ -455,7 +452,7 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Attacks on RC4}{Example for $K\textsubscript{3}$ with $IV=(3,255,V)$ continued}
+\begin{frame}[fragile]{Attacks on RC4}{Example for K\textsubscript{3} Continued}
 
 	\begin{table}[h!]
 		\begin{center}
@@ -484,7 +481,7 @@
 
 \end{frame}
 
-\begin{frame}[fragile]{Attacks on RC4}{Example for $K\textsubscript{3}$ with $IV=(3,255,V)$: Continued}
+\begin{frame}[fragile]{Attacks on RC4}{Example for K\textsubscript{3}: Last step}
 
 	
 	\begin{itemize}
@@ -503,12 +500,13 @@
 	\end{table}
 
 	\begin{itemize}
-		\item Suppose $S\textsubscript{0}, S\textsubscript{1}$ and $S\textsubscript{3}$ will remain unchanged until step $i = 255$
+		\item Suppose$ S\textsubscript{0}, S\textsubscript{1}$ and $S\textsubscript{3}$ will remain unchanged until step $i = 255$
 		\item Then, the first keystreambyte will be computed following the keystream generator algorithm
 	\end{itemize}
+
 \end{frame}
 
-\begin{frame}[fragile]{RC4 Attack}{Recover $K\textsubscript{3}$ with $IV=(3,255,V)$: Last step}
+\begin{frame}[fragile]{RC4 Attack}{Recover $K\textsubscript{3}$}
 
 	\begin{lstlisting}[language=Python]
 		keystream = []
@@ -518,8 +516,7 @@
 			i = (i + 1) % 256
 			j = (sbox[i] + j) % 256
 			Swap(sbox[i], sbox[j])
-			result = sbox[i] + sbox[j] % 256
-			keystream.append(sbox[result])   
+			keystream.append(sbox[(sbox[i] + sbox[j]) % 256])    
 		return keystream   
 	\end{lstlisting}
 	\begin{itemize}
@@ -600,7 +597,7 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Attacks on RC4}{Example for $K\textsubscript{4}$ and K\textsubscript{5}: Last step}
+\begin{frame}[fragile]{Attacks on RC4}{Example for K\textsubscript{4} and K\textsubscript{5}: Last step}
 	\begin{itemize}
 		\item $IV = (4,255,V)$ for $K\textsubscript{4}$ after $i=4$ steps:
 	\end{itemize}
