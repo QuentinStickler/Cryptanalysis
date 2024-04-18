@@ -80,7 +80,7 @@
 \usepackage{setspace}
 \usepackage{listings}
 \usepackage{xcolor}
-\usepackage[natbib=true, backend=biber, style=authoryear, useprefix=true]{biblatex}
+\usepackage[natbib=true, backend=biber, style= numeric, useprefix=true]{biblatex}
 \addbibresource{sources.bib}
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
@@ -116,13 +116,13 @@
 \begin{document}
 \section{General info}
 
-\begin{frame}[fragile]{General info}{History}
+\begin{frame}[fragile]{General info}{History\footnote[frame]{\cite{stallings2005rc4}}}
 	\begin{itemize}
 		\item Stream cipher with \textbf{variable} key-size length
 		\item Most widely used stream cipher in software applications in the past
 		\item Invented in 1987 by Ron Rivest
 		\item Kept secret but got leaked in 1994
-		\item \textbf{Easy} to implement and quite \textbf{fast} (Encryption up to 10x faster than DES)
+		\item \textbf{Easy} to implement and quite \textbf{fast} (Encryption up to 10x faster than DES \footnote[frame]{\cite{stovsic2012rc4}})
 		\item Offers a \textbf{lot of weaknesses und vulnerabilities}
 		\item Better alternatives have been invented
 		\item Now only used in private projects due to its simplicity and performance
@@ -297,39 +297,54 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Keystream Generator}{Example, i = 0}
+\begin{frame}[fragile]{Keystream Generator}{Example, S-box = [$84$, \textcolor{green}{186}, $47$, $208$, $\dots$]}
 	\begin{itemize}
-		\item i = $0$, j = $0$
-		\item i = (0 + 1) $\%$ 256 = $1$
-		\item j = (0 + 186) $\%$ 256 = 186 $\%$ 256 = $186$
-		\item Swap S[i] ($186$) and S[j] ($202$)
-		\item t = (202 + 186) $\%$ 256 = 388 $\%$ 256 = $132$
-		\item S[t] = $102$
-		\item keystream = [$102$, ]
+		\item i = \textcolor{magenta}{0}, j = \textcolor{blue}{0}
+		\item i = (\textcolor{magenta}{0} + 1) $\%$ 256 = \textcolor{olive}{1}
+		\item \textit{\textcolor{gray}{j = (j + sbox[i]) \% 256}}
+		\item j = (\textcolor{blue}{0} + \textcolor{green}{186}) $\%$ 256 = 186 $\%$ 256 = \textcolor{red}{186}
+	\end{itemize}
+	\medskip
+	\begin{itemize}
+		\item Swap S[\textcolor{olive}{1}] (\textcolor{green}{186}) and S[\textcolor{red}{186}] ($202$)
+		\item \textit{\textcolor{gray}{result = sbox[i] + sbox[j] \% 256}}
+		\item t = ($202$ + \textcolor{red}{186}) $\%$ 256 = 388 $\%$ 256 = $132$
+		\item S[$132$] = $102$
+		\item Keystream = [$102$, ]
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Keystream Generator}{Example, i = 1}
+\begin{frame}[fragile]{Keystream Generator}{Example, S-box = [$84$, $186$, \textcolor{green}{47}, $208$, $\dots$]}
 	\begin{itemize}
-		\item i = $1$, j = $186$
-		\item i = (1 + 1) $\%$ 256 = $2$
-		\item j = (186 + 47) $\%$ 256 = 233 $\%$ 256 = $233$
-		\item Swap S[i] ($47$) and S[j] ($11$)
-		\item t = (47 + 11) $\%$ 256 = 58 $\%$ 256 = $58$
-		\item S[t] = $118$
-		\item keystream = [$102$, $118$, ]
+		\item i = \textcolor{magenta}{1}, j = \textcolor{blue}{186}
+		\item i = (\textcolor{magenta}{1} + 1) $\%$ 256 = \textcolor{olive}{2}
+		\item \textit{\textcolor{gray}{j = (j + sbox[i]) \% 256}}
+		\item j = (\textcolor{blue}{186} + \textcolor{green}{47}) $\%$ 256 = 233 $\%$ 256 = \textcolor{red}{233}
+	\end{itemize}
+	\medskip
+	\begin{itemize}
+		\item Swap S[{\textcolor{olive}{2}}] (\textcolor{green}{47}) and S[\textcolor{red}{233}] ($11$)
+		\item \textit{\textcolor{gray}{result = sbox[i] + sbox[j] \% 256}}
+		\item t = (\textcolor{green}{47} + 11) $\%$ 256 = 58 $\%$ 256 = $58$
+		\item S[$132$] = $118$
+		\item Keystream = [$102$, $118$, ]
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Keystream Generator}{Example, i = 2}
+\begin{frame}[fragile]{Keystream Generator}{Example, S-box = [$84$, $186$, $47$, \textcolor{green}{208}, $\dots$]}
 	\begin{itemize}
-		\item i = $2$, j = $233$
-		\item i = (2 + 1) $\%$ 256 = $3$
-		\item j = (233 + 208) $\%$ 256 = 451 $\%$ 256 = $185$
-		\item Swap S[i] ($208$) and S[j] ($90$)
-		\item t = (208 + 90) $\%$ 256 = 298 $\%$ 256 = $42$
-		\item S[t] = $53$
-		\item keystream = [$102$, $118$, $53$, ....]
+		\item i = \textcolor{magenta}{2}, j = \textcolor{blue}{233}
+		\item i = (\textcolor{magenta}{2} + 1) $\%$ 256 = \textcolor{olive}{3}
+		\item \textit{\textcolor{gray}{j = (j + sbox[i]) \% 256}}
+		\item j = (\textcolor{blue}{233} + \textcolor{green}{208}) $\%$ 256 = 451 $\%$ 256 = \textcolor{red}{185}
+	\end{itemize}
+	\medskip
+	\begin{itemize}
+		\item Swap S[\textcolor{olive}{3}] (\textcolor{green}{208}) and S[\textcolor{red}{185}] ($90$)
+		\item \textit{\textcolor{gray}{result = sbox[i] + sbox[j] \% 256}}
+		\item t = (\textcolor{green}{208} + $90$) $\%$ 256 = 298 $\%$ 256 = $42$
+		\item S[$42$] = $53$
+		\item Keystream = [$102$, $118$, $53$, ....]
 		\item Final keystream = [$102$, $118$, $53$, $212$, $66$, $47$, $204$, $221$]
 	\end{itemize}
 \end{frame}
@@ -370,7 +385,7 @@
 
 \section{Attacking RC4}
 
-\begin{frame}[fragile]{WEP}{Short summary}
+\begin{frame}[fragile]{WEP}{Short summary\footnote[frame]{\cite{wepproblems}}}
 	\begin{itemize}
 		\item Wired Equivalent Protocol
 		\item Used in IEEE 802.11 for protecting LAN users against eavesdropping
@@ -382,7 +397,7 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Security problems in WEP}{Outdated since 2004}
+\begin{frame}[fragile]{Security problems in WEP}{Outdated since 2004\footnote[frame]{\cite{wepcracking}}}
 	\begin{itemize}
 		\item "Swiss Cheese" of protocols $\rightarrow$ lots of security vulnerabilities
 		\item Small key sizes; only 64-bit and 128-bit encryption key sizes
@@ -400,7 +415,7 @@
 		\item Small key sizes (40-bit $rk$ and 24-bit $IV$)
 		\item IV is sent clearly together with packets
 		\item Make use of "weak IVs" to recover $rK$ byte for byte
-		\item \textbf{FMS attack} by Fluhrer, Shamir and Mantin in 2000
+		\item \textbf{FMS attack} by Fluhrer, Shamir and Mantin in 2000\footnote[frame]{\cite{fluhrer2001weaknesses}}
 	\end{itemize}
 \end{frame}
 
@@ -668,7 +683,7 @@
 
 \section{Preventing attacks}
 
-\begin{frame}[fragile]{Prevention against RC4 attacks}{Many improved algorithms}
+\begin{frame}[fragile]{Prevention against RC4 attacks}{Many improved algorithms\footnote[frame]{\cite{jindal2017optimization}}}
 	\begin{itemize}
 		\item Performance $\leftrightarrow$ Security trade-off
 		\item \textbf{RC4+}: Best security, but 3x execution time
@@ -691,12 +706,12 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}[fragile]{Increase WEP security}{With regrads to RC4}
+\begin{frame}[fragile]{Increase WEP security}{With regrads to RC4\footnote[frame]{\cite{wepproblems}}}
 	\begin{itemize}
 		\item Add 256 \textbf{more steps} to the initialization process and discard them afterwards
 		\item Use alternative protocols such as \textbf{WPA2/WPA3} with other encryption algorithms
 		\item \textbf{Increase IV sizes} to at least $32$ bits $\rightarrow 2^{8}$ times for attacker to find collisions/useful IVs (Question 11)
-		\item Use other hashing algorithms such as \textbf{MD5, SHA-1}
+		\item Use other hashing algorithms such as \textbf{MD5, SHA-1}\footnote[frame]{\cite{wepproblems}}
 	\end{itemize}
 \end{frame}
 
