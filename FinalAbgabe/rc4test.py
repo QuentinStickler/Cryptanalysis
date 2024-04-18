@@ -130,7 +130,7 @@ def testprobabilityofspecificivs():
     n = 5000000
     # Probability to get certain IV 
     p = 1 / (256**2)
-    # Berechne die Wahrscheinlichkeit, mindestens 60 IVs zu erhalten
+    # Probability of getting at least 60 IVs
     probability_at_least_60 = binom.sf(59, n, p)
 
     print("Probability to obtain at least 60 Ivs:", probability_at_least_60)

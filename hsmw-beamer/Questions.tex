@@ -1,0 +1,42 @@
+\documentclass[5pt,a4paper]{article}
+\usepackage[margin=0.5in]{geometry}
+\begin{document}
+
+\textbf{Question 1:}\\
+Show that the size of the state space of the RC4 cipher is bounded by $2^{16} * 256! \approx 2^{1700}$\\
+\textbf{Answer:} \\
+-Two 8-bit sized indices i and j $\rightarrow$ $(2^{8})^{2}$\\
+-Total amount of 256! permutations for S-box of length $256$\\
+$\rightarrow$ Together size of $(2^{8})^{2} * 256!$\\
+
+\textbf{Question 2:}\\
+In the RC4 attack, suppose that 60 IVs of the form (3,255,V) are available. Empirically determine the probability that the key byte $K\textsubscript{3}$ can be distinguished.\\
+What is the smallest number of IVs for which this probability is greater than $\frac{1}{2}$?\\
+\textbf{Answer:}\\
+See added Python Code for logic. Probability: Ca 5 \%, at least 14 IVs needed\\
+
+\textbf{Question 3:}\\
+Assuming, that the key bytes $K\textsubscript{3}$ through $K\textsubscript{n-1}$ have been recovered, what is the desired form of the IVs that will be used to recover $K\textsubscript{n}$?\\
+\textbf{Answer:} $IV = (n,255,V)$\\
+For $K\textsubscript{n}$ what is the formula corresponding to 3.11?\\
+\textbf{Answer:} \\
+$KB\textsubscript{n} = k\textsubscript{n} - \sum_{1}^{n}x - V - (\sum_{3}^{n-1}K\textsubscript{n})$\\
+
+\textbf{Question 4:}\\
+What is the probability that 3.13 holds?\\
+\textbf{Answer:}\\
+$K\textsubscript{4}$: $(\frac{253}{256})\textsuperscript{251} = 0.0518$\\
+What is the probability that the corresponding equation for $K\textsubscript{n}$ holds?\\
+\textbf{Answer:}\\
+$(\frac{253}{256})\textsuperscript{256-(n+1)}$\\
+
+\textbf{Question 5:}\\
+What is another useful IV for recovering $K\textsubscript{3}$?\\
+\textbf{Answer:}:\\
+(3,253,254)\\
+\textbf{Question 6:}\\
+What are other secure methods to employ RC4 when a long-term key is combined with an IV?\\
+\textbf{Answer:}\\
+Increase key size and increase IV size to at least 32-bit (64-bit would be best). Or send the IV encrypted as well.
+
+\end{document}
